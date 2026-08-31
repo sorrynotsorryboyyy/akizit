@@ -55,7 +55,7 @@ export default async function SuccesPage({
                 <h1 className="section-title mt-5">Commande confirmée</h1>
                 <p className="mt-3 text-ink-soft">
                   {order.items.length} lead{order.items.length > 1 ? 's' : ''} pour{' '}
-                  {formatEuros(order.totalWithVatCents)} TTC. Les coordonnées sont
+                  {formatEuros(order.totalWithVatCents)}. Les coordonnées sont
                   disponibles dès maintenant.
                 </p>
 

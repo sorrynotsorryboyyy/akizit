@@ -1,5 +1,5 @@
 /**
- * Positionnement approximatif des leads sur la carte.
+ * Positionnement approximatif des leads.
  *
  * Publier la position réelle d'un prospect reviendrait à désigner son domicile
  * à tout visiteur, avant même le moindre achat. On ne stocke donc jamais le

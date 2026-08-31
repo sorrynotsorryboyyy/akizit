@@ -75,7 +75,7 @@ export default async function VerticalePage({
           <p className="lede mt-5 max-w-2xl">{vertical.description}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <ButtonLink href="/carte" size="lg">
+            <ButtonLink href="/leads" size="lg">
               Voir les {leads.length} leads disponibles
             </ButtonLink>
             <p className="text-sm text-ink-soft">

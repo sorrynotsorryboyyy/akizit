@@ -8,6 +8,7 @@ export const toitureFields = [
     label: 'Type d’intervention',
     required: true,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'map', values: { refection_totale: 1, isolation: 0.9, fuite: 0.8, reparation: 0.5, nettoyage: 0.3 } } },
     options: [
       { value: 'refection_totale', label: 'Réfection totale' },
       { value: 'reparation', label: 'Réparation ponctuelle' },
@@ -37,6 +38,7 @@ export const toitureFields = [
     label: 'Surface de toiture',
     required: true,
     showInPreview: true,
+    quality: { weight: 10, score: { kind: 'range', at: 40, to: 250 } },
     min: 10,
     max: 2000,
   },
@@ -56,6 +58,7 @@ export const toitureFields = [
     label: 'Intervention urgente',
     required: true,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'bool', whenTrue: 1, whenFalse: 0.4 } },
   },
   {
     key: 'proprietaire',
@@ -63,6 +66,7 @@ export const toitureFields = [
     label: 'Propriétaire du logement',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'bool', whenTrue: 1, whenFalse: 0 } },
   },
   {
     key: 'delaiProjet',
@@ -70,6 +74,7 @@ export const toitureFields = [
     label: 'Délai du projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'map', values: { immediat: 1, moins_3_mois: 0.7, moins_6_mois: 0.35, reflexion: 0.05 } } },
     options: [
       { value: 'immediat', label: 'Immédiat' },
       { value: 'moins_3_mois', label: 'Moins de 3 mois' },

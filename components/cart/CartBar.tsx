@@ -69,7 +69,7 @@ export function CartBar({ leads }: { leads: LeadPublic[] }) {
             )}
             <p className="text-lg leading-tight font-bold text-ink">
               {formatEuros(totals.totalCents)}
-              <span className="ml-1 text-xs font-normal text-ink-faint">HT</span>
+              
             </p>
           </div>
 

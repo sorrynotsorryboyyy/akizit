@@ -27,7 +27,7 @@ export default async function OnboardingPage({
   }
 
   // Compte déjà activé : inutile de repasser par là.
-  if (user.onboarded) redirect(suite ?? '/carte');
+  if (user.onboarded) redirect(suite ?? '/leads');
 
   return (
     <>

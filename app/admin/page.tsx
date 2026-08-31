@@ -13,10 +13,10 @@ export default function AdminDashboardPage() {
 
   // Valeur du stock encore vendable : le chiffre qui pilote l'activité.
   const stockValue = available.reduce(
-    (sum, l) => sum + l.priceCents * (l.maxBuyers - l.soldCount),
+    (sum, l) => sum + l.basePriceCents * (l.maxBuyers - l.soldCount),
     0,
   );
-  const realized = leads.reduce((sum, l) => sum + l.priceCents * l.soldCount, 0);
+  const realized = leads.reduce((sum, l) => sum + l.basePriceCents * l.soldCount, 0);
 
   const byVertical = VERTICAL_LIST.map((v) => ({
     ...v,

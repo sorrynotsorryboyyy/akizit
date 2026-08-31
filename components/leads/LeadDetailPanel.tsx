@@ -10,7 +10,7 @@ import { REQUEST_TYPE_LABELS } from '@/lib/leads/exclusivity';
 import { VERTICALS } from '@/lib/verticals/registry';
 import type { LeadPublic } from '@/lib/leads/types';
 
-/** Panneau de détail d'un lead sélectionné sur la carte. */
+/** Panneau de détail d'un lead sélectionné dans la liste. */
 export function LeadDetailPanel({
   lead,
   onClose,
@@ -29,7 +29,7 @@ export function LeadDetailPanel({
         <div>
           <p className="font-semibold text-ink">Sélectionnez un lead</p>
           <p className="mt-2 max-w-xs text-sm text-ink-soft">
-            Cliquez sur un point de la carte pour consulter le détail de la demande
+            Cliquez sur un lead pour consulter le détail de la demande
             et l’ajouter à votre panier.
           </p>
         </div>
@@ -96,7 +96,7 @@ export function LeadDetailPanel({
         <MaskedContact requestType={lead.requestType} />
 
         <p className="text-xs leading-relaxed text-ink-faint">
-          Lead généré sur {lead.source}. La position affichée est approximative :
+          Lead généré sur {lead.source}. Seule la commune est affichée :
           l’adresse exacte est communiquée après achat.
         </p>
       </div>

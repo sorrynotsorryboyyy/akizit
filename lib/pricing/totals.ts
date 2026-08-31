@@ -28,11 +28,17 @@ export type Totals = {
 /**
  * Taux de TVA appliqué.
  *
- * À confirmer selon le statut du vendeur : 20 % en régime normal, 0 % en
- * franchise en base (auto-entrepreneur), avec une mention légale différente
- * sur la facture. Centralisé ici pour n'avoir qu'un seul point à changer.
+ * 0 % : l'éditeur relève de la franchise en base (art. 293 B du CGI). Le jour
+ * d'un dépassement de seuil, repasser cette seule constante à 0.2 bascule tout
+ * le système — c'est la raison d'être de ce point unique.
  */
-export const VAT_RATE = 0.2;
+export const VAT_RATE = 0;
+
+/** Mention obligatoire sur les factures en franchise en base. */
+export const VAT_EXEMPTION_NOTICE = 'TVA non applicable, art. 293 B du CGI';
+
+/** Vrai quand aucune TVA n'est facturée : pilote l'affichage HT/TTC. */
+export const VAT_EXEMPT = VAT_RATE === 0;
 
 export function computeTotals(
   items: readonly QuoteItem[],

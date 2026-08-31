@@ -26,7 +26,7 @@ export function GoogleSignInButton({ suite }: { suite?: string }) {
     // Un compte sans onboarding ne peut rien acheter : on l'y envoie
     // directement plutôt que de le laisser buter sur une garde.
     const destination = result.onboarded
-      ? (suite ?? '/carte')
+      ? (suite ?? '/leads')
       : `/onboarding${suite ? `?suite=${encodeURIComponent(suite)}` : ''}`;
 
     router.push(destination);

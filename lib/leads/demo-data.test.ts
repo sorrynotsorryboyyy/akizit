@@ -62,8 +62,8 @@ describe('jeu de démonstration', () => {
 
   it('produit des prix en centimes entiers et positifs', () => {
     for (const lead of leads) {
-      expect(Number.isInteger(lead.priceCents)).toBe(true);
-      expect(lead.priceCents).toBeGreaterThan(0);
+      expect(Number.isInteger(lead.basePriceCents)).toBe(true);
+      expect(lead.basePriceCents).toBeGreaterThan(0);
     }
   });
 

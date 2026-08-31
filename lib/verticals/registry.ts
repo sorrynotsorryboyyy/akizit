@@ -12,7 +12,7 @@ import { plomberieFields } from './fields/plomberie';
  * Registre des verticales.
  *
  * Ce module est volontairement dépourvu de Zod : il est importé par des
- * composants client (filtres de carte, badges, formulaire admin) et embarquer
+ * composants client (filtres de liste, badges, formulaire admin) et embarquer
  * la librairie de validation dans le bundle navigateur serait inutile. La
  * validation vit dans ./schemas.ts, marqué `server-only`.
  */
@@ -36,7 +36,7 @@ export type VerticalDef = {
   shortLabel: string;
   slug: string;
   description: string;
-  /** Teinte du marqueur sur la carte. Une couleur par verticale. */
+  /** Teinte de la pastille du métier. Une couleur par verticale. */
   color: string;
   /** Prix de base en centimes, surchargeable lead par lead. */
   defaultPriceCents: number;

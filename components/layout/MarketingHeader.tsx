@@ -4,7 +4,7 @@ import { Container } from '@/components/ui/Card';
 import { SITE } from '@/lib/site-config';
 
 const NAV = [
-  { href: '/carte', label: 'Leads disponibles' },
+  { href: '/leads', label: 'Leads disponibles' },
   { href: '/comment-ca-marche', label: 'Comment ça marche' },
   { href: '/tarifs', label: 'Tarifs' },
 ] as const;
@@ -17,7 +17,7 @@ export function Logo({ className }: { className?: string }) {
         .filter(Boolean)
         .join(' ')}
     >
-      {/* Marqueur de carte : le produit est géographique avant tout. */}
+      {/* Marqueur de lieu : le produit est géographique avant tout. */}
       <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M12 2c-3.9 0-7 3.1-7 7 0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"
@@ -52,7 +52,7 @@ export function MarketingHeader() {
           <ButtonLink href="/connexion" variant="ghost" size="sm">
             Connexion
           </ButtonLink>
-          <ButtonLink href="/carte" size="sm" className="hidden xs:inline-flex">
+          <ButtonLink href="/leads" size="sm" className="hidden xs:inline-flex">
             Voir les leads
           </ButtonLink>
         </div>

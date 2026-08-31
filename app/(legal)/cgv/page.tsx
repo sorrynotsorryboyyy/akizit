@@ -52,7 +52,8 @@ export default function CgvPage() {
 
       <h2>5. Prix et remises</h2>
       <p>
-        Les prix sont indiqués en euros hors taxes sur chaque fiche. Les remises par
+        Les prix sont indiqués en euros nets sur chaque fiche. Akizit relève de la
+        franchise en base de TVA : TVA non applicable, art. 293 B du CGI. Les remises par
         volume s’appliquent automatiquement selon le nombre de leads commandés :
       </p>
       <ul>

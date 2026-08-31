@@ -20,7 +20,7 @@ export default function MentionsLegalesPage() {
       </p>
       <ul>
         <li>Siège social : [adresse complète]</li>
-        <li>Numéro de TVA intracommunautaire : [FR00000000000]</li>
+        <li>Non assujetti à la TVA — franchise en base, art. 293 B du CGI</li>
         <li>Directeur de la publication : [nom]</li>
         <li>Contact : {SITE.email}</li>
       </ul>

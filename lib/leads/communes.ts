@@ -73,7 +73,7 @@ export function findCommune(postalCode: string): Commune | undefined {
   if (exact) return exact;
 
   // Repli sur le département : mieux vaut un point approximatif dans le bon
-  // département qu'un lead absent de la carte.
+  // département qu'un lead absent de la liste.
   const dept = postalCode.slice(0, 2);
   return COMMUNES.find((c) => c.departement === dept);
 }

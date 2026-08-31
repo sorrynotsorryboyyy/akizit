@@ -1,5 +1,6 @@
 import type { Vertical } from '../verticals/registry';
 import type { MaxBuyers, RequestType } from './exclusivity';
+import type { PriceBreakdown } from '../pricing/dynamic';
 
 /** Statut commercial d'un lead. `reserved` couvre les 15 min du checkout. */
 export type LeadStatus = 'available' | 'reserved' | 'sold_out' | 'archived';
@@ -24,7 +25,21 @@ export type LeadDoc = {
   lat: number;
   lng: number;
 
-  priceCents: number;
+  /**
+   * Prix de BASE du lead, en centimes : tarif du métier, éventuellement
+   * surchargé à l'import. Ce n'est jamais le prix affiché — celui-ci est
+   * recalculé à la lecture par computeDynamicPrice (fraîcheur, exclusivité,
+   * qualité). Voir lib/pricing/dynamic.ts.
+   */
+  basePriceCents: number;
+  /**
+   * Score qualité figé à l'ingestion (0–100).
+   *
+   * Le dossier ne change plus après capture : le recalculer à chaque
+   * affichage coûterait du CPU pour un résultat constant. La fraîcheur, elle,
+   * dépend de l'instant et reste calculée à la volée.
+   */
+  qualityScore: number;
   requestType: RequestType;
   maxBuyers: MaxBuyers;
   soldCount: number;
@@ -48,20 +63,20 @@ export type LeadDoc = {
  * choix de la première.
  */
 export type LeadPublic = Omit<LeadDoc, 'reservedBy' | 'reservedUntilMs'> & {
+  /**
+   * Prix du moment, recalculé à chaque lecture.
+   *
+   * Conserve le nom `priceCents` pour que les composants d'affichage restent
+   * inchangés ; seul son sens évolue : « prix courant » et non « prix figé ».
+   */
+  priceCents: number;
+  /** Décomposition du prix, pour justifier le tarif plutôt que le subir. */
+  pricing: PriceBreakdown;
   /** Places restantes, pour l'argument de rareté. */
   remainingSlots: number;
-  /** Le pro courant l'a déjà acheté (grisé sur la carte). */
+  /** Le pro courant l'a déjà acheté (grisé dans la liste). */
   owned: boolean;
 };
-
-/** Charge utile allégée de la carte : ~60 octets par point au lieu de ~400. */
-export type LeadMapPoint = [
-  id: string,
-  lat: number,
-  lng: number,
-  vertical: Vertical,
-  priceCents: number,
-];
 
 /** Document `leadContacts/{id}` — jamais lisible par un client. */
 export type LeadContactDoc = {

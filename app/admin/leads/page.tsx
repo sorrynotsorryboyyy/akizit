@@ -65,7 +65,7 @@ export default async function AdminLeadsPage() {
                     {lead.soldCount} / {lead.maxBuyers}
                   </td>
                   <td className="px-4 py-3 font-semibold whitespace-nowrap">
-                    {formatEuros(lead.priceCents)}
+                    {formatEuros(lead.basePriceCents)}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-ink-soft">
                     {formatAge(lead.capturedAtMs, now)}

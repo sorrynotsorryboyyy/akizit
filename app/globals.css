@@ -216,6 +216,30 @@
   }
 }
 
+@layer components {
+  /* Degrade vivant du hero.
+     Anime en CSS pur, sans JavaScript : le fond se deplace lentement derriere
+     le titre. Fige automatiquement sous prefers-reduced-motion (voir plus bas). */
+  .hero-gradient {
+    background:
+      radial-gradient(60rem 32rem at 12% 18%, var(--color-brand-tint-strong), transparent 62%),
+      radial-gradient(52rem 30rem at 88% 12%, #dcefe6, transparent 58%),
+      radial-gradient(48rem 34rem at 55% 96%, var(--color-brand-tint), transparent 60%),
+      var(--color-brand-tint);
+    background-size: 180% 180%, 170% 170%, 190% 190%, 100% 100%;
+    animation: hero-drift 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-drift {
+    0% {
+      background-position: 0% 40%, 100% 0%, 40% 100%, 0 0;
+    }
+    100% {
+      background-position: 30% 60%, 70% 30%, 60% 70%, 0 0;
+    }
+  }
+}
+
 @layer utilities {
   /* Masque les coordonnées non achetées. Le flou est purement décoratif :
      la donnée réelle n'est jamais envoyée au navigateur, c'est un texte

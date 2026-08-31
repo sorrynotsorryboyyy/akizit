@@ -80,7 +80,7 @@ export default function TarifsPage() {
           </div>
 
           <p className="mt-5 text-sm text-ink-faint">
-            Prix hors taxes. TVA applicable en sus selon la réglementation en vigueur.
+            TVA non applicable, art. 293 B du CGI. Les prix affichés sont les prix nets.
           </p>
         </Section>
 
@@ -130,14 +130,14 @@ export default function TarifsPage() {
                   </dd>
                 </div>
                 <div className="flex justify-between border-t border-line pt-3 text-base">
-                  <dt className="font-semibold">Total HT</dt>
+                  <dt className="font-semibold">Total</dt>
                   <dd className="text-xl font-bold text-brand">
                     {formatEuros(exemple.totalCents)}
                   </dd>
                 </div>
               </dl>
 
-              <ButtonLink href="/carte" className="mt-7 w-full">
+              <ButtonLink href="/leads" className="mt-7 w-full">
                 Composer mon panier
               </ButtonLink>
             </Card>

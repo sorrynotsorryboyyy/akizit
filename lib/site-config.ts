@@ -7,7 +7,7 @@ export const SITE = {
   tagline: 'Des leads travaux exclusifs, achetés à l’unité.',
   description:
     'Akizit vend des demandes de devis qualifiées, générées par nos propres sites. ' +
-    'Choisissez vos leads sur la carte, payez à l’unité, sans abonnement ni engagement.',
+    'Choisissez vos leads dans la liste, payez à l’unité, sans abonnement ni engagement.',
   email: 'contact@akizit.com',
 } as const;
 

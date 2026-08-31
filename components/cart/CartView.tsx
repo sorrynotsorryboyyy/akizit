@@ -7,7 +7,7 @@ import { Button, ButtonLink } from '@/components/ui/Button';
 import { Card, Container } from '@/components/ui/Card';
 import { VerticalBadge } from '@/components/leads/LeadFields';
 import { useCart } from '@/lib/cart/store';
-import { computeTotals } from '@/lib/pricing/totals';
+import { computeTotals, VAT_EXEMPTION_NOTICE } from '@/lib/pricing/totals';
 import { DISCOUNT_TIERS, formatRate, nextTier } from '@/lib/pricing/tiers';
 import { formatEuros } from '@/lib/format';
 import { REQUEST_TYPE_LABELS } from '@/lib/leads/exclusivity';
@@ -88,10 +88,10 @@ export function CartView({ leads }: { leads: LeadPublic[] }) {
         <Card className="mx-auto max-w-lg p-10 text-center">
           <h1 className="section-title">Votre panier est vide</h1>
           <p className="mt-3 text-ink-soft">
-            Parcourez la carte et ajoutez les leads qui correspondent à votre zone
+            Parcourez la liste et ajoutez les leads qui correspondent à votre zone
             d’intervention.
           </p>
-          <ButtonLink href="/carte" size="lg" className="mt-7">
+          <ButtonLink href="/leads" size="lg" className="mt-7">
             Voir les leads disponibles
           </ButtonLink>
         </Card>
@@ -178,24 +178,34 @@ export function CartView({ leads }: { leads: LeadPublic[] }) {
                 </div>
               )}
 
-              <div className="flex justify-between border-t border-line pt-3">
-                <dt className="text-ink-soft">Total HT</dt>
-                <dd className="font-semibold">{formatEuros(totals.totalCents)}</dd>
-              </div>
-
-              <div className="flex justify-between">
-                <dt className="text-ink-soft">
-                  TVA ({Math.round(totals.vatRate * 100)} %)
-                </dt>
-                <dd className="font-medium">{formatEuros(totals.vatCents)}</dd>
-              </div>
+              {/* En franchise en base, afficher « TVA 0 % » puis deux fois le
+                  même total ferait douter de la justesse du calcul : on rend
+                  un montant unique et la mention légale. */}
+              {totals.vatRate > 0 && (
+                <>
+                  <div className="flex justify-between border-t border-line pt-3">
+                    <dt className="text-ink-soft">Total HT</dt>
+                    <dd className="font-semibold">{formatEuros(totals.totalCents)}</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-ink-soft">
+                      TVA ({Math.round(totals.vatRate * 100)} %)
+                    </dt>
+                    <dd className="font-medium">{formatEuros(totals.vatCents)}</dd>
+                  </div>
+                </>
+              )}
 
               <div className="flex justify-between border-t border-line pt-3 text-base">
-                <dt className="font-semibold">Total TTC</dt>
+                <dt className="font-semibold">Total</dt>
                 <dd className="text-xl font-bold text-ink">
                   {formatEuros(totals.totalWithVatCents)}
                 </dd>
               </div>
+
+              {totals.vatRate === 0 && (
+                <p className="text-xs text-ink-faint">{VAT_EXEMPTION_NOTICE}</p>
+              )}
             </dl>
 
             {upcoming && (
@@ -251,7 +261,7 @@ export function CartView({ leads }: { leads: LeadPublic[] }) {
           </Card>
 
           <Link
-            href="/carte"
+            href="/leads"
             className="block text-center text-sm text-ink-soft underline-offset-4 hover:text-brand hover:underline"
           >
             ← Continuer mes achats

@@ -41,7 +41,7 @@ export function MarketingFooter() {
             <p className="text-sm font-semibold">Plateforme</p>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link href="/carte" className="text-sm text-ink-soft hover:text-brand">
+                <Link href="/leads" className="text-sm text-ink-soft hover:text-brand">
                   Leads disponibles
                 </Link>
               </li>

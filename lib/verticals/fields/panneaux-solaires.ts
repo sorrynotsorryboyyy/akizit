@@ -34,6 +34,7 @@ export const panneauxSolairesFields = [
     label: 'Surface de toiture disponible',
     required: true,
     showInPreview: true,
+    quality: { weight: 10, score: { kind: 'range', at: 20, to: 120 } },
     min: 5,
     max: 1000,
   },
@@ -43,6 +44,7 @@ export const panneauxSolairesFields = [
     label: 'Orientation de la toiture',
     required: false,
     showInPreview: true,
+    quality: { weight: 15, score: { kind: 'map', values: { sud: 1, sud_est: 0.85, sud_ouest: 0.85, est: 0.5, ouest: 0.5, nord: 0.1, inconnue: 0.4 } }, whenMissing: 0.4 },
     options: [
       { value: 'sud', label: 'Sud' },
       { value: 'sud_est', label: 'Sud-Est' },
@@ -60,6 +62,7 @@ export const panneauxSolairesFields = [
     label: 'Facture électrique mensuelle',
     required: false,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'range', at: 60, to: 300 }, whenMissing: 0.15 },
     min: 10,
     max: 2000,
     unit: '€',
@@ -70,6 +73,7 @@ export const panneauxSolairesFields = [
     label: 'Propriétaire du logement',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'bool', whenTrue: 1, whenFalse: 0 } },
   },
   {
     key: 'delaiProjet',
@@ -77,6 +81,7 @@ export const panneauxSolairesFields = [
     label: 'Délai du projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 25, score: { kind: 'map', values: { immediat: 1, moins_3_mois: 0.7, moins_6_mois: 0.35, reflexion: 0.05 } } },
     options: [
       { value: 'immediat', label: 'Immédiat' },
       { value: 'moins_3_mois', label: 'Moins de 3 mois' },

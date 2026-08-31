@@ -48,6 +48,7 @@ export const resiliationFields = [
     label: 'Montant mensuel actuel',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'range', at: 15, to: 120 } },
     min: 1,
     max: 2000,
     unit: '€',
@@ -58,6 +59,7 @@ export const resiliationFields = [
     label: 'Motif de résiliation',
     required: true,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'map', values: { trop_cher: 1, service_insuffisant: 0.8, changement_situation: 0.5, demenagement: 0.4, autre: 0.3 } } },
     options: [
       { value: 'trop_cher', label: 'Tarif trop élevé' },
       { value: 'demenagement', label: 'Déménagement' },
@@ -72,6 +74,7 @@ export const resiliationFields = [
     label: 'Échéance dans moins de 3 mois',
     required: true,
     showInPreview: true,
+    quality: { weight: 35, score: { kind: 'bool', whenTrue: 1, whenFalse: 0.2 } },
     help: "Une échéance proche rend le lead nettement plus chaud.",
   },
   {
@@ -80,6 +83,7 @@ export const resiliationFields = [
     label: 'Ancienneté du contrat',
     required: false,
     showInPreview: false,
+    quality: { weight: 15, score: { kind: 'range', at: 0, to: 5 }, whenMissing: 0.2 },
     min: 0,
     max: 60,
     unit: 'ans',

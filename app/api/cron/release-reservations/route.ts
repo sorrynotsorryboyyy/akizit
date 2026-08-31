@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
  *
  * Complète le traitement paresseux (tout lecteur traite une réservation
  * périmée comme libre) : sans ce balayage, un lead abandonné en cours de
- * paiement resterait invisible sur la carte jusqu'à la prochaine tentative
+ * paiement resterait invisible dans la liste jusqu'à la prochaine tentative
  * d'achat.
  *
  * Déclenchée par Vercel Cron toutes les dix minutes.

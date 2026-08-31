@@ -1,5 +1,6 @@
 import { remainingSlots } from './exclusivity';
-import type { LeadDoc, LeadMapPoint, LeadPublic } from './types';
+import { computeDynamicPrice } from '../pricing/dynamic';
+import type { LeadDoc, LeadPublic } from './types';
 
 /**
  * Projection vers le navigateur.
@@ -14,8 +15,13 @@ import type { LeadDoc, LeadMapPoint, LeadPublic } from './types';
  */
 export function toPublicLead(
   doc: LeadDoc,
-  options: { ownedByCurrentUser?: boolean } = {},
+  options: { ownedByCurrentUser?: boolean; now: number },
 ): LeadPublic {
+  // Le prix est calculé ICI, à l'unique frontière entre la base et le
+  // navigateur : liste, fiche, panier et « mes leads » restent ainsi
+  // cohérents sans que chacun ait à y penser.
+  const pricing = computeDynamicPrice(doc, options.now);
+
   return {
     id: doc.id,
     vertical: doc.vertical,
@@ -28,7 +34,10 @@ export function toPublicLead(
     lat: doc.lat,
     lng: doc.lng,
 
-    priceCents: doc.priceCents,
+    basePriceCents: doc.basePriceCents,
+    qualityScore: doc.qualityScore,
+    priceCents: pricing.priceCents,
+    pricing,
     requestType: doc.requestType,
     maxBuyers: doc.maxBuyers,
     soldCount: doc.soldCount,
@@ -43,11 +52,6 @@ export function toPublicLead(
     remainingSlots: remainingSlots(doc.soldCount, doc.maxBuyers),
     owned: options.ownedByCurrentUser ?? false,
   };
-}
-
-/** Point de carte : tableau positionnel, pour alléger la charge utile. */
-export function toMapPoint(doc: LeadDoc): LeadMapPoint {
-  return [doc.id, doc.lat, doc.lng, doc.vertical, doc.priceCents];
 }
 
 /**

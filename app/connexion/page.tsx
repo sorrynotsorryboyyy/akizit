@@ -26,7 +26,7 @@ export default async function ConnexionPage({
   // Déjà connecté : on renvoie vers la destination voulue, ou l'onboarding
   // s'il reste à faire.
   if (user) {
-    redirect(user.onboarded ? (suite ?? '/carte') : '/onboarding');
+    redirect(user.onboarded ? (suite ?? '/leads') : '/onboarding');
   }
 
   return (

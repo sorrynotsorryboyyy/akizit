@@ -26,7 +26,7 @@ export default async function MesLeadsPage() {
   // Même ici, les coordonnées ne sont PAS incluses dans le rendu serveur :
   // elles finiraient dans le payload React et donc dans le HTML. Le composant
   // les récupère à la demande via la route dédiée, qui journalise l'accès.
-  const publicLeads = leads.map((l) => toPublicLead(l, { ownedByCurrentUser: true }));
+  const publicLeads = leads.map((l) => toPublicLead(l, { ownedByCurrentUser: true, now }));
 
   return (
     <>
@@ -41,7 +41,7 @@ export default async function MesLeadsPage() {
                 {publicLeads.length > 1 ? 's' : ''}
               </p>
             </div>
-            <ButtonLink href="/carte" variant="secondary" size="sm">
+            <ButtonLink href="/leads" variant="secondary" size="sm">
               Acheter d’autres leads
             </ButtonLink>
           </div>
@@ -51,10 +51,10 @@ export default async function MesLeadsPage() {
               <Card className="mx-auto max-w-lg p-10 text-center">
                 <h2 className="text-lg font-semibold">Aucun lead pour le moment</h2>
                 <p className="mt-2 text-ink-soft">
-                  Parcourez la carte et achetez vos premiers leads : leurs
+                  Parcourez la liste et achetez vos premiers leads : leurs
                   coordonnées apparaîtront ici immédiatement.
                 </p>
-                <ButtonLink href="/carte" size="lg" className="mt-6">
+                <ButtonLink href="/leads" size="lg" className="mt-6">
                   Voir les leads disponibles
                 </ButtonLink>
               </Card>

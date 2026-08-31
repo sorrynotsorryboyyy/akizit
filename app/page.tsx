@@ -10,7 +10,7 @@ import { formatEuros } from '@/lib/format';
 
 const STEPS = [
   {
-    title: 'Vous choisissez sur la carte',
+    title: 'Vous choisissez vos leads',
     body:
       'Filtrez par métier et par département. Chaque lead affiche sa nature, sa ' +
       'localisation et son ancienneté avant tout engagement.',
@@ -76,9 +76,9 @@ export default function HomePage() {
 
       <main>
         {/* --- Hero ------------------------------------------------------- */}
-        <section className="bg-brand-tint py-20 sm:py-28">
+        <section className="hero-gradient py-24 sm:py-32">
           <Container>
-            <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="max-w-3xl">
               <div>
                 <Badge tone="brand">Réservé aux professionnels</Badge>
                 <h1 className="display-title mt-5">
@@ -88,12 +88,12 @@ export default function HomePage() {
                 </h1>
                 <p className="lede mt-5 max-w-xl">
                   Akizit revend les demandes de devis générées par ses propres sites.
-                  Vous choisissez vos leads sur une carte, vous payez ce que vous
+                  Vous choisissez vos leads dans la liste, vous payez ce que vous
                   prenez, vous appelez dans la foulée. Sans abonnement.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <ButtonLink href="/carte" size="lg">
+                  <ButtonLink href="/leads" size="lg">
                     Voir les leads disponibles
                   </ButtonLink>
                   <ButtonLink href="/comment-ca-marche" variant="secondary" size="lg">
@@ -106,18 +106,6 @@ export default function HomePage() {
                   engagement · Remises dès 3 leads
                 </p>
               </div>
-
-              {/* Aperçu de carte : le produit est géographique, il faut le
-                  montrer immédiatement plutôt que le décrire. */}
-              <Card className="overflow-hidden p-0">
-                <div className="flex items-center justify-between border-b border-line px-5 py-3">
-                  <p className="text-sm font-semibold">Leads en temps réel</p>
-                  <Badge tone="brand">Aperçu</Badge>
-                </div>
-                <div className="relative aspect-4/3 bg-surface-muted">
-                  <HeroMapPreview />
-                </div>
-              </Card>
             </div>
           </Container>
         </section>
@@ -142,7 +130,7 @@ export default function HomePage() {
         <Section tone="muted">
           <p className="eyebrow">Comment ça marche</p>
           <h2 className="section-title mt-3 max-w-2xl">
-            Du choix sur la carte au premier appel, en trois étapes.
+            Du choix du lead au premier appel, en trois étapes.
           </h2>
 
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
@@ -260,7 +248,7 @@ export default function HomePage() {
         <Section tone="inverse">
           <div className="text-center">
             <h2 className="section-title !text-ink-inverse">
-              Vos prochains chantiers sont déjà sur la carte.
+              Vos prochains chantiers vous attendent.
             </h2>
             <p className="mt-4 text-lg text-ink-inverse/75">
               Créez votre compte professionnel en une minute et consultez les leads
@@ -271,10 +259,10 @@ export default function HomePage() {
                 Créer mon compte pro
               </ButtonLink>
               <Link
-                href="/carte"
+                href="/leads"
                 className="inline-flex h-13 items-center px-6 font-semibold text-ink-inverse/90 underline-offset-4 hover:underline"
               >
-                Parcourir la carte
+                Parcourir les leads
               </Link>
             </div>
             <p className="mt-6 text-sm text-ink-inverse/60">
@@ -286,48 +274,5 @@ export default function HomePage() {
 
       <MarketingFooter />
     </>
-  );
-}
-
-/**
- * Silhouette de la France avec quelques marqueurs.
- *
- * Volontairement schématique et statique : la vraie carte MapLibre coûte cher
- * à charger et n'a pas sa place dans un hero. L'intention est d'annoncer le
- * produit, pas de le rendre utilisable ici.
- */
-function HeroMapPreview() {
-  const pins = [
-    { x: 47, y: 22, v: 0 },
-    { x: 62, y: 34, v: 2 },
-    { x: 30, y: 40, v: 3 },
-    { x: 70, y: 58, v: 1 },
-    { x: 44, y: 62, v: 4 },
-    { x: 58, y: 74, v: 5 },
-    { x: 26, y: 66, v: 6 },
-  ];
-
-  return (
-    <svg viewBox="0 0 100 100" className="h-full w-full" role="img" aria-label="Carte de France avec des leads disponibles">
-      <path
-        d="M50 8 L68 16 L78 32 L74 50 L80 62 L70 78 L52 88 L34 84 L22 68 L18 48 L26 30 L38 14 Z"
-        fill="var(--color-brand-tint-strong)"
-        stroke="var(--color-brand)"
-        strokeWidth="0.6"
-        strokeLinejoin="round"
-      />
-      {pins.map((p, i) => (
-        <g key={i}>
-          <circle
-            cx={p.x}
-            cy={p.y}
-            r="3.4"
-            fill={VERTICAL_LIST[p.v].color}
-            opacity="0.25"
-          />
-          <circle cx={p.x} cy={p.y} r="1.7" fill={VERTICAL_LIST[p.v].color} />
-        </g>
-      ))}
-    </svg>
   );
 }

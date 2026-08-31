@@ -1,6 +1,7 @@
 import 'server-only';
 import { adminDb } from '../firebase/admin';
 import { computeTotals } from '../pricing/totals';
+import { computeDynamicPrice } from '../pricing/dynamic';
 import { isStillSellable } from '../leads/exclusivity';
 import { CheckoutError, RESERVATION_MINUTES, type OrderDoc, type OrderItem } from './types';
 import type { LeadDoc } from '../leads/types';
@@ -73,7 +74,16 @@ export async function createOrderWithReservation(
         vertical: lead.vertical,
         ville: lead.city,
         departement: lead.departement,
-        unitPriceCents: lead.priceCents,
+        /*
+         * Le prix est GELÉ ici, à la réservation, et ne bougera plus.
+         *
+         * Il est recalculé plutôt que repris du devis : accepter un montant
+         * transmis par le navigateur ouvrirait la porte à la falsification.
+         * Entre le devis et la réservation, seule la fraîcheur peut avoir
+         * changé — et elle ne fait que décroître, donc l'écart éventuel est
+         * toujours en faveur de l'acheteur.
+         */
+        unitPriceCents: computeDynamicPrice(lead, now).priceCents,
       });
     }
 
@@ -118,7 +128,7 @@ export async function createOrderWithReservation(
  *
  * Complète le traitement paresseux (tout lecteur considère une réservation
  * périmée comme libre) : sans ce balayage, le stock ne réapparaîtrait sur la
- * carte qu'à la prochaine tentative d'achat.
+ * liste qu'à la prochaine tentative d'achat.
  */
 export async function releaseExpiredReservations(
   options: { now?: number; limit?: number } = {},

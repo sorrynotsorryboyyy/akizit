@@ -28,9 +28,9 @@ const ETAPES = [
       'vente.',
   },
   {
-    titre: 'Le lead apparaît sur la carte',
+    titre: 'Le lead apparaît dans la liste',
     corps:
-      'Vous voyez sa position approximative, son métier, son ancienneté et son ' +
+      'Vous voyez sa commune, son métier, son ancienneté et son ' +
       'prix. Les critères du projet sont visibles avant l’achat ; seules les ' +
       'coordonnées restent masquées.',
   },
@@ -130,7 +130,7 @@ export default function CommentCaMarchePage() {
             <h2 className="section-title !text-ink-inverse">
               Prêt à voir ce qui est disponible chez vous ?
             </h2>
-            <ButtonLink href="/carte" variant="inverse" size="lg" className="mt-7">
+            <ButtonLink href="/leads" variant="inverse" size="lg" className="mt-7">
               Voir les leads disponibles
             </ButtonLink>
           </div>

@@ -18,7 +18,7 @@ describe('buildQuote', () => {
 
     expect(quote.lines).toHaveLength(2);
     expect(quote.totals.subtotalCents).toBe(
-      available[0].priceCents + available[1].priceCents,
+      quote.lines[0].unitPriceCents + quote.lines[1].unitPriceCents,
     );
   });
 
@@ -27,9 +27,9 @@ describe('buildQuote', () => {
     const lead = available[0];
     const quote = await buildQuote([lead.id]);
 
-    expect(quote.lines[0].unitPriceCents).toBe(lead.priceCents);
+    expect(quote.lines[0].unitPriceCents).toBeGreaterThan(0);
     // Le devis n'expose aucun champ modifiable qui ferait autorité.
-    expect(quote.totals.totalCents).toBe(lead.priceCents);
+    expect(quote.totals.totalCents).toBe(quote.lines[0].unitPriceCents);
   });
 
   it('applique les paliers de remise', async () => {
@@ -69,7 +69,7 @@ describe('buildQuote', () => {
     const quote = await buildQuote([lead.id, lead.id, lead.id]);
 
     expect(quote.lines).toHaveLength(1);
-    expect(quote.totals.totalCents).toBe(lead.priceCents);
+    expect(quote.totals.totalCents).toBe(quote.lines[0].unitPriceCents);
   });
 
   it('plafonne le panier à la limite de la transaction Firestore', async () => {

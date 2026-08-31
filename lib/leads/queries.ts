@@ -120,7 +120,7 @@ export async function hasEntitlement(
   return snapshot.exists;
 }
 
-/** Identifiants des leads déjà acquis, pour les griser sur la carte. */
+/** Identifiants des leads déjà acquis, pour les griser dans la liste. */
 export async function listEntitlementLeadIds(proId: string): Promise<string[]> {
   if (!adminConfigured) return [];
 

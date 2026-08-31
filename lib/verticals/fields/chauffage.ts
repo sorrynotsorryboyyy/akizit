@@ -28,6 +28,7 @@ export const chauffageFields = [
     label: 'Type de projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 15, score: { kind: 'map', values: { remplacement: 1, installation: 0.9, entretien: 0.2 } } },
     options: [
       { value: 'remplacement', label: 'Remplacement' },
       { value: 'installation', label: 'Première installation' },
@@ -40,6 +41,7 @@ export const chauffageFields = [
     label: 'Surface à chauffer',
     required: true,
     showInPreview: true,
+    quality: { weight: 10, score: { kind: 'range', at: 40, to: 200 } },
     min: 10,
     max: 1000,
   },
@@ -60,6 +62,7 @@ export const chauffageFields = [
     label: 'Propriétaire du logement',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'bool', whenTrue: 1, whenFalse: 0 } },
     help: "Un locataire ne peut pas engager de travaux : l'information est décisive.",
   },
   {
@@ -68,6 +71,7 @@ export const chauffageFields = [
     label: 'Délai du projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 25, score: { kind: 'map', values: { immediat: 1, moins_3_mois: 0.7, moins_6_mois: 0.35, reflexion: 0.05 } } },
     options: [
       { value: 'immediat', label: 'Immédiat' },
       { value: 'moins_3_mois', label: 'Moins de 3 mois' },
@@ -90,6 +94,7 @@ export const chauffageFields = [
     label: 'Budget estimé',
     required: false,
     showInPreview: false,
+    quality: { weight: 20, score: { kind: 'map', values: { moins_5k: 0.2, '5k_10k': 0.5, '10k_20k': 0.8, plus_20k: 1 } }, whenMissing: 0.15 },
     options: [
       { value: 'moins_5k', label: 'Moins de 5 000 €' },
       { value: '5k_10k', label: '5 000 – 10 000 €' },

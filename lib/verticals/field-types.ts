@@ -12,6 +12,30 @@
 
 export type FieldKind = 'enum' | 'number' | 'boolean' | 'year' | 'surface';
 
+/**
+ * Signal de qualité porté par un champ.
+ *
+ * Déclaré à côté de la définition du champ, jamais dans une table séparée :
+ * ajouter un champ à une verticale sans se demander ce qu'il vaut
+ * commercialement est précisément l'erreur qu'on veut rendre impossible.
+ *
+ * Le score obtenu sert à moduler le prix du lead (voir lib/pricing/quality.ts).
+ */
+export type QualitySignal = {
+  /** Poids du champ. Le total des poids d'une verticale sert de dénominateur. */
+  weight: number;
+  /** Traduction de la valeur du champ en contribution normalisée [0, 1]. */
+  score:
+    | { kind: 'map'; values: Record<string, number> }
+    | { kind: 'bool'; whenTrue: number; whenFalse: number }
+    | { kind: 'range'; at: number; to: number };
+  /**
+   * Contribution quand le champ est absent (optionnel non renseigné).
+   * Par défaut 0 : un dossier incomplet est décoté, jamais neutre.
+   */
+  whenMissing?: number;
+};
+
 type BaseField = {
   key: string;
   label: string;
@@ -24,6 +48,8 @@ type BaseField = {
    * d'identifier ou de recontacter le prospect sans payer.
    */
   showInPreview: boolean;
+  /** Absent = le champ ne participe pas au score de qualité. */
+  quality?: QualitySignal;
 };
 
 export type EnumField = BaseField & {

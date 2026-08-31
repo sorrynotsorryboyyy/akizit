@@ -76,7 +76,7 @@ export function OnboardingForm({ suite }: { suite?: string }) {
     // continueraient de renvoyer ici.
     await refreshClaims();
 
-    router.push(suite ?? '/carte');
+    router.push(suite ?? '/leads');
     router.refresh();
   }
 

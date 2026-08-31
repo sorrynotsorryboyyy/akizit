@@ -65,10 +65,18 @@ describe('computeTotals', () => {
   });
 
   it('ajoute la TVA sur le montant remisé, pas sur le sous-total', () => {
-    const t = computeTotals(items(5, 1000));
+    // Taux explicite : ce test vérifie la mécanique de l'assiette, pas le
+    // taux du jour — qui est à 0 % en franchise en base.
+    const t = computeTotals(items(5, 1000), 0.2);
     expect(t.totalCents).toBe(4600); // 5000 - 8 %
     expect(t.vatCents).toBe(920); // 20 % de 4600
     expect(t.totalWithVatCents).toBe(5520);
+  });
+
+  it('n’applique aucune TVA par défaut (franchise en base)', () => {
+    const t = computeTotals(items(3, 1000));
+    expect(t.vatCents).toBe(0);
+    expect(t.totalWithVatCents).toBe(t.totalCents);
   });
 
   it('permet un taux de TVA nul (franchise en base)', () => {

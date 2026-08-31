@@ -8,6 +8,7 @@ export const peintureFields = [
     label: 'Type de travaux',
     required: true,
     showInPreview: true,
+    quality: { weight: 15, score: { kind: 'map', values: { ravalement: 1, mixte: 0.9, exterieur: 0.8, interieur: 0.6 } } },
     options: [
       { value: 'interieur', label: 'Intérieur' },
       { value: 'exterieur', label: 'Extérieur' },
@@ -21,6 +22,7 @@ export const peintureFields = [
     label: 'Surface à peindre',
     required: true,
     showInPreview: true,
+    quality: { weight: 20, score: { kind: 'range', at: 20, to: 200 } },
     min: 5,
     max: 2000,
   },
@@ -51,6 +53,7 @@ export const peintureFields = [
     label: 'Logement occupé pendant les travaux',
     required: false,
     showInPreview: true,
+    quality: { weight: 10, score: { kind: 'bool', whenTrue: 0.6, whenFalse: 1 }, whenMissing: 0.5 },
     help: "Conditionne la protection du mobilier et le planning.",
   },
   {
@@ -59,6 +62,7 @@ export const peintureFields = [
     label: 'Délai du projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'map', values: { immediat: 1, moins_3_mois: 0.7, moins_6_mois: 0.35, reflexion: 0.05 } } },
     options: [
       { value: 'immediat', label: 'Immédiat' },
       { value: 'moins_3_mois', label: 'Moins de 3 mois' },
@@ -72,6 +76,7 @@ export const peintureFields = [
     label: 'Budget estimé',
     required: false,
     showInPreview: false,
+    quality: { weight: 25, score: { kind: 'map', values: { moins_2k: 0.2, '2k_5k': 0.5, '5k_10k': 0.8, plus_10k: 1 } }, whenMissing: 0.15 },
     options: [
       { value: 'moins_2k', label: 'Moins de 2 000 €' },
       { value: '2k_5k', label: '2 000 – 5 000 €' },

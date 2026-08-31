@@ -4,6 +4,7 @@ import { resolveMaxBuyers } from './exclusivity';
 import { findCommune } from './communes';
 import { departementFromPostalCode, jitterCoordinates } from './geo';
 import { VERTICALS } from '../verticals/registry';
+import { computeQualityScore } from '../pricing/quality';
 import type { LeadContactDoc, LeadDoc } from './types';
 
 /**
@@ -112,7 +113,8 @@ function buildDocuments(
     region: commune?.region ?? '',
     lat,
     lng,
-    priceCents: (input.priceCents as unknown as number) ?? def.defaultPriceCents,
+    basePriceCents: (input.priceCents as unknown as number) ?? def.defaultPriceCents,
+    qualityScore: computeQualityScore(vertical, data).score,
     requestType,
     maxBuyers,
     soldCount: 0,

@@ -53,3 +53,9 @@ firestore-debug.log
 ui-debug.log
 firebase-debug.log
 .firebase/
+
+# Exception, en DERNIER : en gitignore la derniere regle qui matche gagne.
+# Placee plus haut, elle serait annulee par `.env*.local` juste au-dessus.
+# Sans elle, le gabarit ne part jamais sur le depot et personne ne sait
+# quelles variables renseigner sur Vercel.
+!.env.local.example

@@ -2,6 +2,7 @@ import { COMMUNES } from './communes';
 import { jitterCoordinates } from './geo';
 import { resolveMaxBuyers, type RequestType } from './exclusivity';
 import { VERTICALS, VERTICAL_KEYS, type Vertical } from '../verticals/registry';
+import { computeQualityScore } from '../pricing/quality';
 import type { FieldDef } from '../verticals/field-types';
 import type { LeadDoc, LeadStatus } from './types';
 
@@ -110,7 +111,8 @@ export function generateDemoLeads(count = 240, seed = 20260831): LeadDoc[] {
       region: commune.region,
       lat,
       lng,
-      priceCents,
+      basePriceCents: priceCents,
+      qualityScore: computeQualityScore(vertical, data).score,
       requestType,
       maxBuyers,
       soldCount,

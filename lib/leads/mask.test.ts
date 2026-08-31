@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { maskEmail, maskPhone, toMapPoint, toPublicLead } from './mask';
+import { maskEmail, maskPhone, toPublicLead } from './mask';
 import type { LeadDoc } from './types';
+
+const NOW = 1_700_000_500_000;
 
 const doc: LeadDoc = {
   id: 'lead-1',
@@ -12,7 +14,8 @@ const doc: LeadDoc = {
   region: 'Pays de la Loire',
   lat: 47.2184,
   lng: -1.5536,
-  priceCents: 4500,
+  basePriceCents: 4500,
+  qualityScore: 70,
   requestType: 'devis',
   maxBuyers: 3,
   soldCount: 1,
@@ -27,7 +30,7 @@ const doc: LeadDoc = {
 
 describe('toPublicLead', () => {
   it('n’expose jamais les champs de réservation', () => {
-    const pub = toPublicLead(doc) as Record<string, unknown>;
+    const pub = toPublicLead(doc, { now: NOW }) as Record<string, unknown>;
     expect(pub.reservedBy).toBeUndefined();
     expect(pub.reservedUntilMs).toBeUndefined();
   });
@@ -43,7 +46,7 @@ describe('toPublicLead', () => {
       nom: 'Dupont',
     } as unknown as LeadDoc;
 
-    const serialisé = JSON.stringify(toPublicLead(pollué));
+    const serialisé = JSON.stringify(toPublicLead(pollué, { now: NOW }));
     expect(serialisé).not.toContain('0612345678');
     expect(serialisé).not.toContain('victime@example.com');
     expect(serialisé).not.toContain('Dupont');
@@ -51,26 +54,15 @@ describe('toPublicLead', () => {
   });
 
   it('calcule les places restantes', () => {
-    expect(toPublicLead(doc).remainingSlots).toBe(2);
-    expect(toPublicLead({ ...doc, soldCount: 3 }).remainingSlots).toBe(0);
+    expect(toPublicLead(doc, { now: NOW }).remainingSlots).toBe(2);
+    expect(toPublicLead({ ...doc, soldCount: 3 }, { now: NOW }).remainingSlots).toBe(0);
     // Un compteur incohérent ne doit pas produire un négatif affichable.
-    expect(toPublicLead({ ...doc, soldCount: 5 }).remainingSlots).toBe(0);
+    expect(toPublicLead({ ...doc, soldCount: 5 }, { now: NOW }).remainingSlots).toBe(0);
   });
 
   it('marque la possession par le pro courant', () => {
-    expect(toPublicLead(doc).owned).toBe(false);
-    expect(toPublicLead(doc, { ownedByCurrentUser: true }).owned).toBe(true);
-  });
-});
-
-describe('toMapPoint', () => {
-  it('réduit le lead à cinq valeurs positionnelles', () => {
-    expect(toMapPoint(doc)).toEqual(['lead-1', 47.2184, -1.5536, 'pac', 4500]);
-  });
-
-  it('ne transporte aucune donnée sensible', () => {
-    const pollué = { ...doc, telephone: '0612345678' } as unknown as LeadDoc;
-    expect(JSON.stringify(toMapPoint(pollué))).not.toContain('0612345678');
+    expect(toPublicLead(doc, { now: NOW }).owned).toBe(false);
+    expect(toPublicLead(doc, { ownedByCurrentUser: true, now: NOW }).owned).toBe(true);
   });
 });
 

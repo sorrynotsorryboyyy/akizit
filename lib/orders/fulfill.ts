@@ -102,7 +102,8 @@ export async function fulfillOrder(
         orderId,
         vertical: lead.vertical,
         pricePaidCents:
-          order.items.find((i) => i.leadId === lead.id)?.unitPriceCents ?? lead.priceCents,
+          order.items.find((i) => i.leadId === lead.id)?.unitPriceCents ??
+          lead.basePriceCents,
         grantedAtMs: now,
       };
 

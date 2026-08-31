@@ -8,6 +8,7 @@ export const pacFields = [
     label: 'Type de pompe à chaleur',
     required: true,
     showInPreview: true,
+    quality: { weight: 10, score: { kind: 'map', values: { air_eau: 1, air_air: 1, geothermie: 1, indecis: 0.4 } } },
     options: [
       { value: 'air_eau', label: 'Air / Eau' },
       { value: 'air_air', label: 'Air / Air' },
@@ -44,6 +45,7 @@ export const pacFields = [
     label: 'Propriétaire du logement',
     required: true,
     showInPreview: true,
+    quality: { weight: 30, score: { kind: 'bool', whenTrue: 1, whenFalse: 0 } },
   },
   {
     key: 'delaiProjet',
@@ -51,6 +53,7 @@ export const pacFields = [
     label: 'Délai du projet',
     required: true,
     showInPreview: true,
+    quality: { weight: 25, score: { kind: 'map', values: { immediat: 1, moins_3_mois: 0.7, moins_6_mois: 0.35, reflexion: 0.05 } } },
     options: [
       { value: 'immediat', label: 'Immédiat' },
       { value: 'moins_3_mois', label: 'Moins de 3 mois' },
@@ -64,6 +67,7 @@ export const pacFields = [
     label: 'Éligible aux aides (MaPrimeRénov’)',
     required: false,
     showInPreview: true,
+    quality: { weight: 15, score: { kind: 'bool', whenTrue: 1, whenFalse: 0.5 }, whenMissing: 0.4 },
     help: "Un dossier éligible se conclut beaucoup plus souvent.",
   },
   {
@@ -81,6 +85,7 @@ export const pacFields = [
     label: 'Budget estimé',
     required: false,
     showInPreview: false,
+    quality: { weight: 20, score: { kind: 'map', values: { moins_10k: 0.2, '10k_15k': 0.5, '15k_25k': 0.8, plus_25k: 1 } }, whenMissing: 0.15 },
     options: [
       { value: 'moins_10k', label: 'Moins de 10 000 €' },
       { value: '10k_15k', label: '10 000 – 15 000 €' },

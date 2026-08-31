@@ -88,10 +88,10 @@ describe('parseLeadImport', () => {
 
   it('applique le prix de base de la verticale par défaut', () => {
     const r = parseLeadImport([row()], { now: NOW });
-    expect(r.valid[0].lead.priceCents).toBe(4500);
+    expect(r.valid[0].lead.basePriceCents).toBe(4500);
 
     const custom = parseLeadImport([row({ priceCents: 6000 })], { now: NOW });
-    expect(custom.valid[0].lead.priceCents).toBe(6000);
+    expect(custom.valid[0].lead.basePriceCents).toBe(6000);
   });
 
   it('génère le résumé depuis les données typées', () => {

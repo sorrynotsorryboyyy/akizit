@@ -2,6 +2,7 @@ import 'server-only';
 import { getLeadsByIds } from '../leads/queries';
 import { isStillSellable } from '../leads/exclusivity';
 import { computeTotals, type Totals } from './totals';
+import { computeDynamicPrice } from './dynamic';
 import { MAX_CART_ITEMS } from './tiers';
 
 /**
@@ -84,7 +85,9 @@ export async function buildQuote(
       vertical: lead.vertical,
       ville: lead.city,
       departement: lead.departement,
-      unitPriceCents: lead.priceCents,
+      // Recalculé à l'instant du devis : la fraîcheur évolue chaque jour, un
+      // prix figé en base vieillirait faux.
+      unitPriceCents: computeDynamicPrice(lead, now).priceCents,
     });
   }
 
