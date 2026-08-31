@@ -92,7 +92,16 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
 
     instance.addControl(new NavigationControl({ showCompass: false }), 'top-right');
 
-    instance.on('load', () => {
+    /**
+     * Construction des couches.
+     *
+     * Isolée dans une fonction et protégée : si un addLayer échoue, l'overlay
+     * de chargement doit malgré tout disparaître, sinon il masque une carte
+     * parfaitement fonctionnelle — exactement le défaut observé.
+     */
+    const buildLayers = () => {
+      if (instance.getSource(SOURCE_ID)) return;
+
       instance.addSource(SOURCE_ID, {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
@@ -165,8 +174,37 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
         'lead-points',
       );
 
-      setReady(true);
-    });
+    };
+
+    const start = () => {
+      try {
+        buildLayers();
+      } catch (error) {
+        // Journalisé sans masquer la carte : mieux vaut une carte sans
+        // marqueurs qu'un écran de chargement perpétuel.
+        console.error('MapLibre : construction des couches', error);
+      } finally {
+        setReady(true);
+      }
+    };
+
+    // `isStyleLoaded()` couvre le cas où le style est déjà prêt au moment où
+    // l'on s'abonne : `once('load')` ne se déclencherait alors jamais.
+    if (instance.isStyleLoaded()) start();
+    else instance.once('load', start);
+
+    /**
+     * Filet de sécurité.
+     *
+     * Il appelle `start()`, et non un simple `setReady(true)` : masquer
+     * l'overlay sans avoir construit les couches donnerait une carte de fond
+     * correcte mais définitivement dépourvue de marqueurs, l'effet de mise à
+     * jour des données ne trouvant aucune source à alimenter.
+     *
+     * `buildLayers` étant idempotent (il sort si la source existe déjà), un
+     * appel redondant avec `once('load')` est sans effet.
+     */
+    const fallback = setTimeout(start, 8000);
 
     // --- Interactions ---
     instance.on('click', 'lead-points', (e: MapLayerMouseEvent) => {
@@ -206,9 +244,11 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
 
     map.current = instance;
 
+
     // Sans ce nettoyage, le Fast Refresh empile les instances WebGL jusqu'à
     // saturer le contexte graphique du navigateur.
     return () => {
+      clearTimeout(fallback);
       instance.remove();
       map.current = null;
     };
@@ -225,6 +265,7 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
   // Mise en évidence du lead sélectionné.
   useEffect(() => {
     if (!ready || !map.current) return;
+    if (!map.current.getLayer('lead-selected')) return;
     map.current.setFilter('lead-selected', ['==', ['get', 'leadId'], selectedId ?? '']);
   }, [selectedId, ready]);
 
@@ -234,8 +275,12 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
           carte s'initialise à 0 px et reste grise. */}
       <div ref={container} className="h-full w-full" />
       {!ready && (
-        <div className="absolute inset-0 grid place-items-center bg-surface-muted">
-          <p className="text-sm text-ink-faint">Chargement de la carte…</p>
+        // `pointer-events-none` et un fond semi-transparent : même si cet état
+        // persistait à tort, la carte resterait visible et utilisable.
+        <div className="pointer-events-none absolute inset-0 grid place-items-center bg-surface-muted/70">
+          <p className="rounded-full bg-surface px-4 py-2 text-sm text-ink-faint shadow-card">
+            Chargement de la carte…
+          </p>
         </div>
       )}
     </div>
