@@ -1,0 +1,91 @@
+import type { FieldDef } from '../field-types';
+
+/** Pompe à chaleur — verticale à plus forte valeur, panier moyen élevé. */
+export const pacFields = [
+  {
+    key: 'typePac',
+    kind: 'enum',
+    label: 'Type de pompe à chaleur',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'air_eau', label: 'Air / Eau' },
+      { value: 'air_air', label: 'Air / Air' },
+      { value: 'geothermie', label: 'Géothermie' },
+      { value: 'indecis', label: 'À déterminer' },
+    ],
+  },
+  {
+    key: 'surfaceM2',
+    kind: 'surface',
+    label: 'Surface à chauffer',
+    required: true,
+    showInPreview: true,
+    min: 20,
+    max: 1000,
+  },
+  {
+    key: 'chauffageActuel',
+    kind: 'enum',
+    label: 'Chauffage actuel',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'fioul', label: 'Fioul' },
+      { value: 'gaz', label: 'Gaz' },
+      { value: 'electrique', label: 'Électrique' },
+      { value: 'bois', label: 'Bois' },
+      { value: 'aucun', label: 'Aucun' },
+    ],
+  },
+  {
+    key: 'proprietaire',
+    kind: 'boolean',
+    label: 'Propriétaire du logement',
+    required: true,
+    showInPreview: true,
+  },
+  {
+    key: 'delaiProjet',
+    kind: 'enum',
+    label: 'Délai du projet',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'immediat', label: 'Immédiat' },
+      { value: 'moins_3_mois', label: 'Moins de 3 mois' },
+      { value: 'moins_6_mois', label: 'Moins de 6 mois' },
+      { value: 'reflexion', label: 'En réflexion' },
+    ],
+  },
+  {
+    key: 'aidesEligible',
+    kind: 'boolean',
+    label: 'Éligible aux aides (MaPrimeRénov’)',
+    required: false,
+    showInPreview: true,
+    help: "Un dossier éligible se conclut beaucoup plus souvent.",
+  },
+  {
+    key: 'anneeConstruction',
+    kind: 'year',
+    label: 'Année de construction',
+    required: false,
+    showInPreview: false,
+    min: 1800,
+    max: 2026,
+  },
+  {
+    key: 'budgetEstime',
+    kind: 'enum',
+    label: 'Budget estimé',
+    required: false,
+    showInPreview: false,
+    options: [
+      { value: 'moins_10k', label: 'Moins de 10 000 €' },
+      { value: '10k_15k', label: '10 000 – 15 000 €' },
+      { value: '15k_25k', label: '15 000 – 25 000 €' },
+      { value: 'plus_25k', label: 'Plus de 25 000 €' },
+    ],
+  },
+] as const satisfies readonly FieldDef[];

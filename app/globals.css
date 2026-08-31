@@ -1,26 +1,191 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   Charte graphique — Akizit
+
+   La direction artistique s'inspire de HubSpot : de grandes respirations
+   verticales, une typographie très contrastée (titres lourds contre un corps
+   gris moyen), et une alternance stricte blanc / teinte de marque qui rythme
+   la page sans multiplier les bordures. L'orange HubSpot devient ici un vert
+   profond, repris de la charte de Dératisation Cholet pour que les sites du
+   groupe partagent la même famille chromatique.
+
+   L'ambre est réservé aux signaux de rareté et aux badges « premium ».
+   Jamais décoratif : s'il apparaît, c'est qu'il y a une information.
+   ========================================================================== */
+
+@theme {
+  /* --- Fonds ------------------------------------------------------------ */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6f9f7;
+  --color-surface-sunken: #eef2f0;
+  --color-surface-inverse: #07231a;
+
+  /* --- Texte ------------------------------------------------------------ */
+  --color-ink: #0b1f18;
+  --color-ink-soft: #4a5f57;
+  --color-ink-faint: #7d8f88;
+  --color-ink-inverse: #eaf4ef;
+
+  /* --- Marque ----------------------------------------------------------- */
+  --color-brand: #0b6b4f;
+  --color-brand-dark: #085840;
+  --color-brand-light: #1a8a68;
+  --color-brand-tint: #eef6f2;
+  --color-brand-tint-strong: #d7ebe2;
+
+  /* --- Accent : strictement réservé à la rareté et aux badges premium --- */
+  --color-accent: #b8791f;
+  --color-accent-tint: #fdf6ea;
+
+  /* --- Alerte : erreurs de formulaire, leads perdus --------------------- */
+  --color-danger: #b4462a;
+  --color-danger-tint: #fdf1ee;
+
+  /* --- Traits ----------------------------------------------------------- */
+  --color-line: #e2eae6;
+  --color-line-strong: #c9d8d1;
+
+  /* --- Typographie ------------------------------------------------------ */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* --- Rayons ----------------------------------------------------------- */
+  --radius-field: 0.75rem;
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+  --radius-hero: 2.25rem;
+
+  /* --- Ombres : très douces, jamais de « drop shadow » marqué ----------- */
+  --shadow-card: 0 1px 3px rgba(11, 31, 24, 0.05);
+  --shadow-panel: 0 4px 28px rgba(11, 31, 24, 0.08);
+  --shadow-cta: 0 8px 24px rgba(11, 107, 79, 0.22);
+
+  /* Palier pour les très petits écrans (iPhone SE : 375px). */
+  --breakpoint-xs: 26rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Anneau de focus cohérent partout, au clavier uniquement. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Sur iOS, une taille inférieure à 16px déclenche un zoom automatique
+     à la mise au point d'un champ — ce qui casse la mise en page mobile. */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-tint-strong);
+    color: var(--color-ink);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Libellé de section : la même accroche verte partout, une seule source. */
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+  }
+
+  /* Échelle de titres HubSpot : très large sur desktop, jamais en dessous
+     de 1.75rem sur mobile pour garder la hiérarchie sur petit écran. */
+  .display-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    color: var(--color-ink);
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+
+  .lede {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 640px) {
+    .display-title {
+      font-size: 3.25rem;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+    }
+
+    .lede {
+      font-size: 1.1875rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .display-title {
+      font-size: 3.75rem;
+    }
+  }
+}
+
+@layer utilities {
+  /* Masque les coordonnées non achetées. Le flou est purement décoratif :
+     la donnée réelle n'est jamais envoyée au navigateur, c'est un texte
+     factice qui est flouté. Voir components/leads/MaskedContact.tsx. */
+  .blur-locked {
+    filter: blur(5px);
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

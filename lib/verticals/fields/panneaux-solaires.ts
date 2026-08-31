@@ -1,0 +1,87 @@
+import type { FieldDef } from '../field-types';
+
+/** Panneaux solaires — photovoltaïque, thermique, autoconsommation. */
+export const panneauxSolairesFields = [
+  {
+    key: 'typeInstallation',
+    kind: 'enum',
+    label: 'Type d’installation',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'photovoltaique', label: 'Photovoltaïque' },
+      { value: 'thermique', label: 'Solaire thermique' },
+      { value: 'hybride', label: 'Hybride' },
+      { value: 'indecis', label: 'À déterminer' },
+    ],
+  },
+  {
+    key: 'objectif',
+    kind: 'enum',
+    label: 'Objectif principal',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'autoconsommation', label: 'Autoconsommation' },
+      { value: 'revente', label: 'Revente totale' },
+      { value: 'mixte', label: 'Autoconsommation + revente' },
+      { value: 'eau_chaude', label: 'Eau chaude sanitaire' },
+    ],
+  },
+  {
+    key: 'surfaceToitureM2',
+    kind: 'surface',
+    label: 'Surface de toiture disponible',
+    required: true,
+    showInPreview: true,
+    min: 5,
+    max: 1000,
+  },
+  {
+    key: 'orientationToiture',
+    kind: 'enum',
+    label: 'Orientation de la toiture',
+    required: false,
+    showInPreview: true,
+    options: [
+      { value: 'sud', label: 'Sud' },
+      { value: 'sud_est', label: 'Sud-Est' },
+      { value: 'sud_ouest', label: 'Sud-Ouest' },
+      { value: 'est', label: 'Est' },
+      { value: 'ouest', label: 'Ouest' },
+      { value: 'nord', label: 'Nord' },
+      { value: 'inconnue', label: 'Inconnue' },
+    ],
+    help: "Une orientation sud change radicalement le rendement estimé.",
+  },
+  {
+    key: 'factureElectriqueMensuelle',
+    kind: 'number',
+    label: 'Facture électrique mensuelle',
+    required: false,
+    showInPreview: true,
+    min: 10,
+    max: 2000,
+    unit: '€',
+  },
+  {
+    key: 'proprietaire',
+    kind: 'boolean',
+    label: 'Propriétaire du logement',
+    required: true,
+    showInPreview: true,
+  },
+  {
+    key: 'delaiProjet',
+    kind: 'enum',
+    label: 'Délai du projet',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'immediat', label: 'Immédiat' },
+      { value: 'moins_3_mois', label: 'Moins de 3 mois' },
+      { value: 'moins_6_mois', label: 'Moins de 6 mois' },
+      { value: 'reflexion', label: 'En réflexion' },
+    ],
+  },
+] as const satisfies readonly FieldDef[];

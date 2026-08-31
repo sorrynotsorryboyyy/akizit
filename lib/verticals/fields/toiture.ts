@@ -1,0 +1,80 @@
+import type { FieldDef } from '../field-types';
+
+/** Toiture — réfection, nettoyage, isolation, urgences fuite. */
+export const toitureFields = [
+  {
+    key: 'typeIntervention',
+    kind: 'enum',
+    label: 'Type d’intervention',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'refection_totale', label: 'Réfection totale' },
+      { value: 'reparation', label: 'Réparation ponctuelle' },
+      { value: 'nettoyage', label: 'Nettoyage / démoussage' },
+      { value: 'isolation', label: 'Isolation de toiture' },
+      { value: 'fuite', label: 'Fuite / urgence' },
+    ],
+  },
+  {
+    key: 'typeCouverture',
+    kind: 'enum',
+    label: 'Type de couverture',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'tuiles', label: 'Tuiles' },
+      { value: 'ardoise', label: 'Ardoise' },
+      { value: 'zinc', label: 'Zinc' },
+      { value: 'bac_acier', label: 'Bac acier' },
+      { value: 'toit_plat', label: 'Toit plat / étanchéité' },
+      { value: 'autre', label: 'Autre' },
+    ],
+  },
+  {
+    key: 'surfaceM2',
+    kind: 'surface',
+    label: 'Surface de toiture',
+    required: true,
+    showInPreview: true,
+    min: 10,
+    max: 2000,
+  },
+  {
+    key: 'nombreEtages',
+    kind: 'number',
+    label: 'Nombre d’étages',
+    required: false,
+    showInPreview: true,
+    min: 0,
+    max: 10,
+    help: "Détermine le besoin d'échafaudage, donc le montant du devis.",
+  },
+  {
+    key: 'urgence',
+    kind: 'boolean',
+    label: 'Intervention urgente',
+    required: true,
+    showInPreview: true,
+  },
+  {
+    key: 'proprietaire',
+    kind: 'boolean',
+    label: 'Propriétaire du logement',
+    required: true,
+    showInPreview: true,
+  },
+  {
+    key: 'delaiProjet',
+    kind: 'enum',
+    label: 'Délai du projet',
+    required: true,
+    showInPreview: true,
+    options: [
+      { value: 'immediat', label: 'Immédiat' },
+      { value: 'moins_3_mois', label: 'Moins de 3 mois' },
+      { value: 'moins_6_mois', label: 'Moins de 6 mois' },
+      { value: 'reflexion', label: 'En réflexion' },
+    ],
+  },
+] as const satisfies readonly FieldDef[];

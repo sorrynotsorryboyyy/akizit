@@ -1,69 +1,333 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { MarketingHeader } from '@/components/layout/MarketingHeader';
+import { MarketingFooter } from '@/components/layout/MarketingFooter';
+import { ButtonLink } from '@/components/ui/Button';
+import { Badge, Card, Container, Section } from '@/components/ui/Card';
+import { SITE, SOURCE_SITES } from '@/lib/site-config';
+import { VERTICAL_LIST } from '@/lib/verticals/registry';
+import { DISCOUNT_TIERS, formatRate } from '@/lib/pricing/tiers';
+import { formatEuros } from '@/lib/format';
 
-export default function Home() {
+const STEPS = [
+  {
+    title: 'Vous choisissez sur la carte',
+    body:
+      'Filtrez par métier et par département. Chaque lead affiche sa nature, sa ' +
+      'localisation et son ancienneté avant tout engagement.',
+  },
+  {
+    title: 'Vous payez à l’unité',
+    body:
+      'Pas d’abonnement, pas d’engagement, pas de minimum. Vous ne payez que les ' +
+      'leads que vous avez choisis, au prix affiché.',
+  },
+  {
+    title: 'Vous appelez dans la minute',
+    body:
+      'Les coordonnées se débloquent immédiatement après paiement. Vous exportez ' +
+      'en CSV pour votre CRM si vous le souhaitez.',
+  },
+] as const;
+
+const FAQ = [
+  {
+    q: 'D’où viennent vos leads ?',
+    a:
+      'De nos propres sites. Nous ne rachetons pas de bases à des tiers : chaque ' +
+      'demande provient d’un formulaire rempli par un particulier sur l’un de nos ' +
+      'sites, avec son consentement explicite à être recontacté par un professionnel.',
+  },
+  {
+    q: 'Combien d’artisans reçoivent le même lead ?',
+    a:
+      'Cela dépend de la demande du particulier. S’il a demandé à être rappelé, le ' +
+      'lead est exclusif : un seul acheteur, parce qu’une personne qui attend un ' +
+      'appel n’en attend pas trois. S’il a demandé des devis, le lead part à trois ' +
+      'professionnels au maximum. L’information est affichée sur chaque fiche.',
+  },
+  {
+    q: 'Y a-t-il un engagement ou un abonnement ?',
+    a:
+      'Aucun. Vous achetez à l’unité, quand vous en avez besoin. Les remises par ' +
+      'volume s’appliquent automatiquement dès trois leads dans le panier.',
+  },
+  {
+    q: 'Que se passe-t-il si un lead est injoignable ?',
+    a:
+      'Signalez-le depuis votre espace dans les 72 heures. Si le numéro est invalide ' +
+      'ou si la personne déclare n’avoir jamais fait de demande, le lead vous est ' +
+      'recrédité.',
+  },
+  {
+    q: 'Qui peut acheter sur Akizit ?',
+    a:
+      'Uniquement des professionnels. Un numéro SIRET valide est demandé à ' +
+      'l’inscription et vérifié avant tout achat.',
+  },
+] as const;
+
+export default function HomePage() {
+  const priceRange = VERTICAL_LIST.map((v) => v.defaultPriceCents);
+  const minPrice = Math.min(...priceRange);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <MarketingHeader />
+
+      <main>
+        {/* --- Hero ------------------------------------------------------- */}
+        <section className="bg-brand-tint py-20 sm:py-28">
+          <Container>
+            <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+              <div>
+                <Badge tone="brand">Réservé aux professionnels</Badge>
+                <h1 className="display-title mt-5">
+                  Des leads travaux exclusifs,
+                  <br />
+                  achetés à l’unité.
+                </h1>
+                <p className="lede mt-5 max-w-xl">
+                  Akizit revend les demandes de devis générées par ses propres sites.
+                  Vous choisissez vos leads sur une carte, vous payez ce que vous
+                  prenez, vous appelez dans la foulée. Sans abonnement.
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <ButtonLink href="/carte" size="lg">
+                    Voir les leads disponibles
+                  </ButtonLink>
+                  <ButtonLink href="/comment-ca-marche" variant="secondary" size="lg">
+                    Comment ça marche
+                  </ButtonLink>
+                </div>
+
+                <p className="mt-5 text-sm text-ink-soft">
+                  À partir de <strong>{formatEuros(minPrice)}</strong> le lead · Aucun
+                  engagement · Remises dès 3 leads
+                </p>
+              </div>
+
+              {/* Aperçu de carte : le produit est géographique, il faut le
+                  montrer immédiatement plutôt que le décrire. */}
+              <Card className="overflow-hidden p-0">
+                <div className="flex items-center justify-between border-b border-line px-5 py-3">
+                  <p className="text-sm font-semibold">Leads en temps réel</p>
+                  <Badge tone="brand">Aperçu</Badge>
+                </div>
+                <div className="relative aspect-4/3 bg-surface-muted">
+                  <HeroMapPreview />
+                </div>
+              </Card>
+            </div>
+          </Container>
+        </section>
+
+        {/* --- Sites sources ---------------------------------------------- */}
+        <Section tone="surface" className="!py-14">
+          <p className="text-center text-sm font-medium text-ink-faint">
+            Nos leads proviennent exclusivement de nos propres sites
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-5">
+            {SOURCE_SITES.map((s) => (
+              <div key={s.domain} className="text-center">
+                <p className="text-lg font-bold tracking-tight text-ink">{s.label}</p>
+                <p className="text-xs text-ink-faint">{s.focus}</p>
+              </div>
+            ))}
+            <p className="text-sm text-ink-faint">et d’autres à venir…</p>
+          </div>
+        </Section>
+
+        {/* --- Comment ça marche ------------------------------------------ */}
+        <Section tone="muted">
+          <p className="eyebrow">Comment ça marche</p>
+          <h2 className="section-title mt-3 max-w-2xl">
+            Du choix sur la carte au premier appel, en trois étapes.
+          </h2>
+
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            {STEPS.map((step, i) => (
+              <Card as="li" key={step.title} className="p-7">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-base font-bold text-white">
+                  {i + 1}
+                </span>
+                <h3 className="mt-5 text-lg font-semibold">{step.title}</h3>
+                <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">
+                  {step.body}
+                </p>
+              </Card>
+            ))}
+          </ol>
+        </Section>
+
+        {/* --- Verticales -------------------------------------------------- */}
+        <Section tone="surface">
+          <p className="eyebrow">Nos verticales</p>
+          <h2 className="section-title mt-3 max-w-2xl">
+            Sept métiers couverts, chacun avec ses propres critères de
+            qualification.
+          </h2>
+          <p className="lede mt-4 max-w-2xl">
+            Un lead PAC n’a rien à voir avec un lead résiliation. Chaque fiche porte
+            les informations qui comptent pour votre métier : surface, énergie
+            actuelle, délai, statut de propriétaire.
+          </p>
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {VERTICAL_LIST.map((v) => (
+              <Card key={v.key} className="flex flex-col p-6">
+                <span
+                  className="h-2.5 w-10 rounded-full"
+                  style={{ backgroundColor: v.color }}
+                  aria-hidden="true"
+                />
+                <h3 className="mt-4 text-lg font-semibold">{v.label}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
+                  {v.description}
+                </p>
+                <p className="mt-5 text-sm font-semibold text-brand">
+                  dès {formatEuros(v.defaultPriceCents)} le lead
+                </p>
+              </Card>
+            ))}
+          </div>
+        </Section>
+
+        {/* --- Remises ----------------------------------------------------- */}
+        <Section tone="tint">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <p className="eyebrow">Tarifs dégressifs</p>
+              <h2 className="section-title mt-3">
+                Plus vous en prenez, moins vous payez.
+              </h2>
+              <p className="lede mt-4">
+                Les remises s’appliquent automatiquement selon le nombre de leads dans
+                votre panier. Aucun code, aucune négociation, aucun engagement de
+                volume.
+              </p>
+              <ButtonLink href="/tarifs" variant="secondary" className="mt-7">
+                Voir la grille complète
+              </ButtonLink>
+            </div>
+
+            <div className="space-y-3">
+              {[...DISCOUNT_TIERS]
+                .sort((a, b) => a.minItems - b.minItems)
+                .map((tier) => (
+                  <Card
+                    key={tier.minItems}
+                    className="flex items-center justify-between px-6 py-5"
+                  >
+                    <span className="font-semibold">
+                      À partir de {tier.minItems} leads
+                    </span>
+                    <span className="text-xl font-bold text-brand">
+                      −{formatRate(tier.rate)}
+                    </span>
+                  </Card>
+                ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* --- FAQ --------------------------------------------------------- */}
+        <Section tone="surface">
+          <p className="eyebrow">Questions fréquentes</p>
+          <h2 className="section-title mt-3">Ce que les professionnels demandent.</h2>
+
+          <div className="mt-10 max-w-3xl divide-y divide-line border-t border-line">
+            {FAQ.map((item) => (
+              <details key={item.q} className="group py-5">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 font-semibold marker:content-['']">
+                  {item.q}
+                  <span
+                    className="shrink-0 text-xl text-brand transition-transform group-open:rotate-45"
+                    aria-hidden="true"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-soft">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </Section>
+
+        {/* --- CTA final --------------------------------------------------- */}
+        <Section tone="inverse">
+          <div className="text-center">
+            <h2 className="section-title !text-ink-inverse">
+              Vos prochains chantiers sont déjà sur la carte.
+            </h2>
+            <p className="mt-4 text-lg text-ink-inverse/75">
+              Créez votre compte professionnel en une minute et consultez les leads
+              disponibles près de chez vous.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <ButtonLink href="/connexion" variant="inverse" size="lg">
+                Créer mon compte pro
+              </ButtonLink>
+              <Link
+                href="/carte"
+                className="inline-flex h-13 items-center px-6 font-semibold text-ink-inverse/90 underline-offset-4 hover:underline"
+              >
+                Parcourir la carte
+              </Link>
+            </div>
+            <p className="mt-6 text-sm text-ink-inverse/60">
+              SIRET requis · {SITE.domain}
+            </p>
+          </div>
+        </Section>
       </main>
-    </div>
+
+      <MarketingFooter />
+    </>
+  );
+}
+
+/**
+ * Silhouette de la France avec quelques marqueurs.
+ *
+ * Volontairement schématique et statique : la vraie carte MapLibre coûte cher
+ * à charger et n'a pas sa place dans un hero. L'intention est d'annoncer le
+ * produit, pas de le rendre utilisable ici.
+ */
+function HeroMapPreview() {
+  const pins = [
+    { x: 47, y: 22, v: 0 },
+    { x: 62, y: 34, v: 2 },
+    { x: 30, y: 40, v: 3 },
+    { x: 70, y: 58, v: 1 },
+    { x: 44, y: 62, v: 4 },
+    { x: 58, y: 74, v: 5 },
+    { x: 26, y: 66, v: 6 },
+  ];
+
+  return (
+    <svg viewBox="0 0 100 100" className="h-full w-full" role="img" aria-label="Carte de France avec des leads disponibles">
+      <path
+        d="M50 8 L68 16 L78 32 L74 50 L80 62 L70 78 L52 88 L34 84 L22 68 L18 48 L26 30 L38 14 Z"
+        fill="var(--color-brand-tint-strong)"
+        stroke="var(--color-brand)"
+        strokeWidth="0.6"
+        strokeLinejoin="round"
+      />
+      {pins.map((p, i) => (
+        <g key={i}>
+          <circle
+            cx={p.x}
+            cy={p.y}
+            r="3.4"
+            fill={VERTICAL_LIST[p.v].color}
+            opacity="0.25"
+          />
+          <circle cx={p.x} cy={p.y} r="1.7" fill={VERTICAL_LIST[p.v].color} />
+        </g>
+      ))}
+    </svg>
   );
 }
