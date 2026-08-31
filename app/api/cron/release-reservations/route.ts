@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
 import { releaseExpiredReservations } from '@/lib/orders/reserve';
-import { adminConfigured } from '@/lib/firebase/admin';
+import { isAdminConfigured } from '@/lib/firebase/admin';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: 'Non autorisé.' }, { status: 401 });
   }
 
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     return NextResponse.json(
       { ok: false, error: 'Backend non configuré.' },
       { status: 503 },

@@ -1,5 +1,5 @@
 import 'server-only';
-import { adminConfigured, adminDb } from '../firebase/admin';
+import { isAdminConfigured, adminDb } from '../firebase/admin';
 import { getDemoLeads } from './demo-data';
 import type { LeadContactDoc, LeadDoc } from './types';
 
@@ -26,7 +26,7 @@ const CONTACTS = 'leadContacts';
 export async function listAvailableLeads(
   filters: LeadFilters = {},
 ): Promise<LeadDoc[]> {
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     return getDemoLeads()
       .filter((l) => l.status !== 'archived')
       .filter((l) => !filters.vertical || l.vertical === filters.vertical)
@@ -52,7 +52,7 @@ export async function listAvailableLeads(
 }
 
 export async function getLead(leadId: string): Promise<LeadDoc | null> {
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     return getDemoLeads().find((l) => l.id === leadId) ?? null;
   }
 
@@ -66,7 +66,7 @@ export async function getLead(leadId: string): Promise<LeadDoc | null> {
 export async function getLeadsByIds(ids: string[]): Promise<LeadDoc[]> {
   if (ids.length === 0) return [];
 
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     const all = getDemoLeads();
     return ids
       .map((id) => all.find((l) => l.id === id))
@@ -93,7 +93,7 @@ export async function getLeadsByIds(ids: string[]): Promise<LeadDoc[]> {
 export async function getLeadContact(
   leadId: string,
 ): Promise<LeadContactDoc | null> {
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     // En démonstration, aucune coordonnée n'existe : renvoyer un jeu factice
     // ferait croire au bon fonctionnement d'un chemin non testé.
     return null;
@@ -110,7 +110,7 @@ export async function hasEntitlement(
   proId: string,
   leadId: string,
 ): Promise<boolean> {
-  if (!adminConfigured) return false;
+  if (!isAdminConfigured()) return false;
 
   const snapshot = await adminDb()
     .collection('entitlements')
@@ -122,7 +122,7 @@ export async function hasEntitlement(
 
 /** Identifiants des leads déjà acquis, pour les griser dans la liste. */
 export async function listEntitlementLeadIds(proId: string): Promise<string[]> {
-  if (!adminConfigured) return [];
+  if (!isAdminConfigured()) return [];
 
   const snapshot = await adminDb()
     .collection('entitlements')

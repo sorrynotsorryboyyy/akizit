@@ -4,7 +4,7 @@ import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { Card, Container } from '@/components/ui/Card';
 import { ButtonLink } from '@/components/ui/Button';
 import { requireOnboardedPro } from '@/lib/auth/guards';
-import { adminConfigured, adminDb } from '@/lib/firebase/admin';
+import { isAdminConfigured, adminDb } from '@/lib/firebase/admin';
 import { formatEuros } from '@/lib/format';
 import type { OrderDoc } from '@/lib/orders/types';
 
@@ -24,7 +24,7 @@ export default async function SuccesPage({
   const { commande } = await searchParams;
   const user = await requireOnboardedPro('/mes-leads');
 
-  if (!commande || !adminConfigured) redirect('/mes-leads');
+  if (!commande || !isAdminConfigured()) redirect('/mes-leads');
 
   const snapshot = await adminDb().collection('orders').doc(commande).get();
   const order = snapshot.exists ? (snapshot.data() as OrderDoc) : null;

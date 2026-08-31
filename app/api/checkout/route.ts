@@ -5,7 +5,7 @@ import { createOrderWithReservation } from '@/lib/orders/reserve';
 import { CheckoutError } from '@/lib/orders/types';
 import { getPaymentProvider } from '@/lib/payments';
 import { MAX_CART_ITEMS } from '@/lib/pricing/tiers';
-import { adminConfigured } from '@/lib/firebase/admin';
+import { isAdminConfigured } from '@/lib/firebase/admin';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
   const guard = await requireOnboardedProApi();
   if (!guard.ok) return guard.response;
 
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     return NextResponse.json(
       { ok: false, error: 'Paiement indisponible : backend non configuré.' },
       { status: 503 },

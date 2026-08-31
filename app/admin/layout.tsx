@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/auth/guards';
-import { adminConfigured } from '@/lib/firebase/admin';
+import { isAdminConfigured } from '@/lib/firebase/admin';
 import { Container } from '@/components/ui/Card';
 import { Logo } from '@/components/layout/MarketingHeader';
 
@@ -32,7 +32,7 @@ export const dynamic = 'force-dynamic';
  * clairement plutôt que de laisser croire à une protection inexistante.
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  if (adminConfigured) await requireAdmin();
+  if (isAdminConfigured()) await requireAdmin();
   return (
     <div className="min-h-screen bg-surface-muted">
       <header className="border-b border-line bg-surface">
@@ -58,7 +58,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </Container>
       </header>
 
-      {!adminConfigured && (
+      {!isAdminConfigured() && (
         <div className="border-b border-danger/30 bg-danger-tint">
           <Container className="py-2.5">
             <p className="text-sm text-danger">

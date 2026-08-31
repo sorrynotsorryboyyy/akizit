@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { FieldValue } from 'firebase-admin/firestore';
-import { adminConfigured, adminDb } from '@/lib/firebase/admin';
+import { isAdminConfigured, adminDb } from '@/lib/firebase/admin';
 import { currentUser } from '@/lib/firebase/session';
 import { getLeadContact, hasEntitlement } from '@/lib/leads/queries';
 
@@ -35,7 +35,7 @@ export async function GET(
     return NextResponse.json({ ok: false, error: 'Non autorisé.' }, { status: 401 });
   }
 
-  if (!adminConfigured) {
+  if (!isAdminConfigured()) {
     return NextResponse.json(
       { ok: false, error: 'Backend non configuré sur cet environnement.' },
       { status: 503 },

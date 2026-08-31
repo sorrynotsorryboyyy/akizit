@@ -69,7 +69,19 @@ export function adminDb(): Firestore {
   return db;
 }
 
-/** Vrai lorsque le backend est réellement configuré. */
-export const adminConfigured = Boolean(
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY || process.env.FIRESTORE_EMULATOR_HOST,
-);
+/**
+ * Le backend est-il réellement configuré ?
+ *
+ * FONCTION et non constante : une constante est évaluée à l'import du module,
+ * donc figée au moment du BUILD. Un build lancé sur un poste où `.env.local`
+ * existe produirait un bundle persuadé que Firestore est disponible, et le
+ * déploiement échouerait en tentant de joindre un émulateur inexistant —
+ * exactement le défaut observé en production.
+ *
+ * Évaluée à chaque appel, elle reflète l'environnement d'exécution réel.
+ */
+export function isAdminConfigured(): boolean {
+  return Boolean(
+    process.env.FIREBASE_SERVICE_ACCOUNT_KEY || process.env.FIRESTORE_EMULATOR_HOST,
+  );
+}
