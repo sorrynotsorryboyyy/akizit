@@ -213,7 +213,6 @@ export default function MapCanvas({ leads, selectedId, onSelect }: Props) {
       map.current = null;
     };
     // Volontairement sans dépendances : la carte n'est créée qu'une fois.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Mise à jour des données sans réinitialiser la carte.

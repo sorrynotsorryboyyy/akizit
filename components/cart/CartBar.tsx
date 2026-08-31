@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useCart } from '@/lib/cart/store';
 import { computeTotals } from '@/lib/pricing/totals';
 import { formatRate, nextTier } from '@/lib/pricing/tiers';
@@ -19,10 +19,10 @@ export function CartBar({ leads }: { leads: LeadPublic[] }) {
   const leadIds = useCart((s) => s.leadIds);
   const clear = useCart((s) => s.clear);
 
-  // Le localStorage n'existe pas au rendu serveur : on n'affiche la barre
-  // qu'après montage pour éviter une divergence d'hydratation.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  // Le localStorage n'existe pas au rendu serveur. zustand/persist expose son
+  // propre drapeau de réhydratation : on l'utilise plutôt qu'un
+  // useEffect+setState, que React 19 signale comme rendu en cascade.
+  const hydrated = useCart((s) => s.hydrated);
 
   const items = useMemo(
     () =>
@@ -33,7 +33,7 @@ export function CartBar({ leads }: { leads: LeadPublic[] }) {
     [leadIds, leads],
   );
 
-  if (!mounted || items.length === 0) return null;
+  if (!hydrated || items.length === 0) return null;
 
   const totals = computeTotals(items);
   const upcoming = nextTier(totals.itemCount);

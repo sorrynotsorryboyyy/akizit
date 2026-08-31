@@ -165,6 +165,57 @@
   }
 }
 
+@layer components {
+  /* Mise en forme des pages légales et éditoriales. Défini ici plutôt que
+     répété dans chaque page : ces textes n'ont qu'un seul gabarit. */
+  .prose-akizit h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 2.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-ink);
+  }
+
+  .prose-akizit h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-akizit p,
+  .prose-akizit li {
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+  }
+
+  .prose-akizit p {
+    margin-bottom: 1rem;
+  }
+
+  .prose-akizit ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose-akizit li {
+    margin-bottom: 0.375rem;
+  }
+
+  .prose-akizit strong {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .prose-akizit a {
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
 @layer utilities {
   /* Masque les coordonnées non achetées. Le flou est purement décoratif :
      la donnée réelle n'est jamais envoyée au navigateur, c'est un texte
