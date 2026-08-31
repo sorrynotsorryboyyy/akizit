@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { LeadsMap } from '@/components/map/LeadsMap';
-import { getDemoLeads } from '@/lib/leads/demo-data';
+import { listAvailableLeads, listEntitlementLeadIds } from '@/lib/leads/queries';
 import { toPublicLead } from '@/lib/leads/mask';
+import { optionalUser } from '@/lib/auth/guards';
 import { currentTimestamp } from '@/lib/now';
 
 export const metadata: Metadata = {
@@ -25,7 +26,18 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function CartePage() {
-  const leads = getDemoLeads().map((lead) => toPublicLead(lead));
+  const user = await optionalUser();
+
+  // Les leads déjà acquis sont marqués pour être grisés sur la carte : on lit
+  // SES propres droits, jamais ceux des autres professionnels.
+  const owned = new Set(
+    user?.onboarded ? await listEntitlementLeadIds(user.uid) : [],
+  );
+
+  const docs = await listAvailableLeads();
+  const leads = docs.map((lead) =>
+    toPublicLead(lead, { ownedByCurrentUser: owned.has(lead.id) }),
+  );
 
   // Lu depuis la requête, pas pendant le rendu : appeler Date.now() dans le
   // corps du composant le rendrait impur (React 19 le signale).

@@ -47,3 +47,9 @@ page.html
 # Secrets Firebase / Stripe
 .env*.local
 serviceAccountKey.json
+
+# Emulateurs Firebase
+firestore-debug.log
+ui-debug.log
+firebase-debug.log
+.firebase/

@@ -22,6 +22,9 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['**/*.test.ts', '**/*.test.tsx'],
-    exclude: ['node_modules/**', '.next/**'],
+    // Les tests de règles exigent l'émulateur Firestore : ils vivent dans une
+    // configuration à part (npm run test:rules) pour ne pas casser `npm test`
+    // sur une machine qui ne l'a pas démarré.
+    exclude: ['node_modules/**', '.next/**', 'tests/rules/**'],
   },
 });

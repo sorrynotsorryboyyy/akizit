@@ -1,0 +1,115 @@
+rules_version = '2';
+
+/**
+ * Règles de sécurité Firestore — Akizit
+ *
+ * Principe directeur : le SDK client ne sert qu'à LIRE la vitrine et ses
+ * propres documents. Toute écriture métier passe par l'Admin SDK dans une
+ * route serveur, lequel ignore ces règles par conception.
+ *
+ * Ces règles sont donc volontairement fermées en écriture : il n'existe aucun
+ * chemin par lequel un navigateur pourrait se déclarer propriétaire d'un lead,
+ * modifier un prix ou s'attribuer le rôle administrateur.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * L'onboarding est lu depuis un custom claim, pas depuis un get() sur le
+     * document du pro : un get() dans une règle est facturé comme une lecture
+     * et compte dans la limite de 10 accès par évaluation.
+     */
+    function isOnboarded() {
+      return signedIn() && request.auth.token.onboarded == true;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.role == 'admin';
+    }
+
+    /* ------------------------------------------------------------------
+       COORDONNÉES DES PROSPECTS — verrou absolu.
+
+       Aucun client ne lit cette collection, jamais, quel que soit son rôle.
+       L'administrateur lui-même passe par une route serveur : c'est ce qui
+       garantit que TOUTE révélation de coordonnées est journalisée dans
+       auditLogs, sans exception possible.
+
+       Collection racine et non sous-collection de leads : les requêtes de
+       groupe de collection peuvent contourner des règles mal ciblées sur les
+       sous-collections, piège classique de Firestore.
+       ------------------------------------------------------------------ */
+    match /leadContacts/{leadId} {
+      allow read, write: if false;
+    }
+
+    /* ------------------------------------------------------------------
+       VITRINE
+
+       Lisible par un pro onboardé uniquement : le stock disponible est une
+       information commerciale, pas une donnée publique. La carte publique est
+       servie par une route serveur avec une charge utile allégée.
+       ------------------------------------------------------------------ */
+    match /leads/{leadId} {
+      allow read: if isOnboarded();
+      allow create, update, delete: if false;
+    }
+
+    /* ------------------------------------------------------------------
+       PROFILS PROFESSIONNELS
+
+       Chacun lit le sien. L'écriture directe est refusée : le SIRET, le rôle
+       et le statut d'onboarding conditionnent l'accès au produit, ils ne
+       peuvent pas être décidés par le navigateur.
+       ------------------------------------------------------------------ */
+    match /pros/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    /* ------------------------------------------------------------------
+       COMMANDES
+
+       Lecture de ses propres commandes, pour l'historique et pour suivre en
+       temps réel la confirmation du paiement. Écriture serveur uniquement :
+       les montants ne sont jamais fixés par le client.
+       ------------------------------------------------------------------ */
+    match /orders/{orderId} {
+      allow read: if signedIn() && resource.data.proId == request.auth.uid;
+      allow write: if false;
+    }
+
+    /* ------------------------------------------------------------------
+       DROITS D'ACCÈS
+
+       Le pro lit les siens pour savoir quels leads afficher comme débloqués.
+       Le document ne contient aucune coordonnée : seulement l'existence du
+       droit.
+       ------------------------------------------------------------------ */
+    match /entitlements/{entitlementId} {
+      allow read: if signedIn() && resource.data.proId == request.auth.uid;
+      allow write: if false;
+    }
+
+    /* --- Grille tarifaire : lisible pour afficher les prix ------------- */
+    match /config/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    /* --- Collections internes : aucun accès client -------------------- */
+    match /counters/{document} { allow read, write: if false; }
+    match /imports/{document} { allow read, write: if false; }
+    match /webhookEvents/{document} { allow read, write: if false; }
+    match /auditLogs/{document} { allow read, write: if false; }
+
+    /* --- Refus par défaut de toute collection non listée -------------- */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

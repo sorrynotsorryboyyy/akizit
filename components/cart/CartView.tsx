@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Card, Container } from '@/components/ui/Card';
 import { VerticalBadge } from '@/components/leads/LeadFields';
@@ -16,6 +17,49 @@ export function CartView({ leads }: { leads: LeadPublic[] }) {
   const leadIds = useCart((s) => s.leadIds);
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
+
+  const router = useRouter();
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  /**
+   * Départ vers le paiement.
+   *
+   * On n'envoie que des identifiants : le serveur relit les prix, réserve les
+   * leads et calcule le montant qui fait foi. Le total affiché ici n'est
+   * qu'un miroir.
+   */
+  async function checkout() {
+    setPending(true);
+    setCheckoutError(null);
+
+    const response = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ leadIds }),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      if (data?.code === 'NON_CONNECTE') {
+        router.push('/connexion?suite=%2Fpanier');
+        return;
+      }
+      if (data?.code === 'ONBOARDING_REQUIS') {
+        router.push('/onboarding?suite=%2Fpanier');
+        return;
+      }
+      setCheckoutError(data?.error ?? 'Le paiement n’a pas pu démarrer.');
+      setPending(false);
+      return;
+    }
+
+    // Le prestataire peut renvoyer une URL externe (Stripe) : seul un chemin
+    // interne passe par le routeur.
+    if (data.url.startsWith('/')) router.push(data.url);
+    else window.location.assign(data.url);
+  }
 
   // Le localStorage n'existe pas au rendu serveur. zustand/persist expose son
   // propre drapeau de réhydratation : on l'utilise plutôt qu'un
@@ -161,13 +205,26 @@ export function CartView({ leads }: { leads: LeadPublic[] }) {
               </p>
             )}
 
-            <Button className="mt-5 w-full" size="lg" disabled>
-              Passer au paiement
+            <Button
+              className="mt-5 w-full"
+              size="lg"
+              onClick={checkout}
+              disabled={pending}
+            >
+              {pending ? 'Redirection…' : 'Passer au paiement'}
             </Button>
 
+            {checkoutError && (
+              <p
+                role="alert"
+                className="mt-3 rounded-field bg-danger-tint px-3 py-2.5 text-sm text-danger"
+              >
+                {checkoutError}
+              </p>
+            )}
+
             <p className="mt-3 text-center text-xs text-ink-faint">
-              Le paiement sera activé à la mise en ligne. Les montants sont
-              recalculés par le serveur avant tout débit.
+              Les montants sont recalculés par le serveur avant tout débit.
             </p>
           </Card>
 

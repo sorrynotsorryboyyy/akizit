@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { requireAdmin } from '@/lib/auth/guards';
+import { adminConfigured } from '@/lib/firebase/admin';
 import { Container } from '@/components/ui/Card';
 import { Logo } from '@/components/layout/MarketingHeader';
 
@@ -16,14 +18,21 @@ const NAV = [
   { href: '/admin/import', label: 'Import JSON' },
 ] as const;
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 /**
  * Gabarit de l'administration.
  *
- * L'accès n'est pas encore protégé : la vérification du rôle admin arrive avec
- * Firebase Auth en phase 2. Le bandeau le rappelle explicitement pour que
- * personne ne déploie cet écran en l'état.
+ * L'accès exige le rôle `admin`, vérifié avec checkRevoked : le coût d'un
+ * aller-retour réseau est négligeable face au risque qu'un accès retiré reste
+ * actif jusqu'à l'expiration du cookie.
+ *
+ * Sans backend configuré, la garde est inopérante : on l'annonce alors
+ * clairement plutôt que de laisser croire à une protection inexistante.
  */
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  if (adminConfigured) await requireAdmin();
   return (
     <div className="min-h-screen bg-surface-muted">
       <header className="border-b border-line bg-surface">
@@ -49,15 +58,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </Container>
       </header>
 
-      <div className="border-b border-danger/30 bg-danger-tint">
-        <Container className="py-2.5">
-          <p className="text-sm text-danger">
-            <strong>Accès non protégé.</strong> L’authentification et la vérification
-            du rôle administrateur seront branchées en phase 2, avant toute mise en
-            ligne.
-          </p>
-        </Container>
-      </div>
+      {!adminConfigured && (
+        <div className="border-b border-danger/30 bg-danger-tint">
+          <Container className="py-2.5">
+            <p className="text-sm text-danger">
+              <strong>Accès non protégé.</strong> Backend non configuré sur cet
+              environnement : la vérification du rôle administrateur est inactive.
+              Ne déployez pas en l’état.
+            </p>
+          </Container>
+        </div>
+      )}
 
       <main className="py-10">
         <Container>{children}</Container>
