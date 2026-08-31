@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { SITE } from '@/lib/site-config';
+import { LEGAL, adresseComplete, siren } from '@/lib/legal-config';
 
 export const metadata: Metadata = {
   title: 'Mentions légales',
@@ -14,21 +15,21 @@ export default function MentionsLegalesPage() {
 
       <h2>Éditeur du site</h2>
       <p>
-        Le site {SITE.domain} est édité par <strong>[Raison sociale]</strong>,
-        [forme juridique] au capital de [montant] €, immatriculée au RCS de [ville]
-        sous le numéro <strong>[SIREN]</strong>.
+        Le site {SITE.domain} est édité par <strong>{LEGAL.raisonSociale}</strong>,
+        {' '}{LEGAL.statut.toLowerCase()}, immatriculé sous le numéro SIREN{' '}
+        <strong>{siren()}</strong> (SIRET {LEGAL.siret}).
       </p>
       <ul>
-        <li>Siège social : [adresse complète]</li>
+        <li>Siège social : {adresseComplete() || '—'}</li>
         <li>Non assujetti à la TVA — franchise en base, art. 293 B du CGI</li>
-        <li>Directeur de la publication : [nom]</li>
-        <li>Contact : {SITE.email}</li>
+        <li>Directeur de la publication : {LEGAL.directeurPublication}</li>
+        <li>Contact : {LEGAL.email}</li>
       </ul>
 
       <h2>Hébergement</h2>
       <p>
-        Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133,
-        Walnut, CA 91789, États-Unis.
+        Le site est hébergé par <strong>{LEGAL.hebergeur.nom}</strong>,{' '}
+        {LEGAL.hebergeur.adresse}.
       </p>
       <p>
         Les données applicatives sont hébergées par <strong>Google Ireland Limited</strong>{' '}

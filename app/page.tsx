@@ -3,6 +3,7 @@ import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { MarketingFooter } from '@/components/layout/MarketingFooter';
 import { ButtonLink } from '@/components/ui/Button';
 import { Badge, Card, Container, Section } from '@/components/ui/Card';
+import { SourceLogo } from '@/components/ui/SourceLogo';
 import { SITE, SOURCE_SITES } from '@/lib/site-config';
 import { VERTICAL_LIST } from '@/lib/verticals/registry';
 import { DISCOUNT_TIERS, formatRate } from '@/lib/pricing/tiers';
@@ -118,8 +119,8 @@ export default function HomePage() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-5">
             {SOURCE_SITES.map((s) => (
               <div key={s.domain} className="text-center">
-                <p className="text-lg font-bold tracking-tight text-ink">{s.label}</p>
-                <p className="text-xs text-ink-faint">{s.focus}</p>
+                <SourceLogo domain={s.domain} label={s.label} height={30} />
+                <p className="mt-1.5 text-xs text-ink-faint">{s.focus}</p>
               </div>
             ))}
             <p className="text-sm text-ink-faint">et d’autres à venir…</p>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { SITE, SOURCE_SITES } from '@/lib/site-config';
+import { SOURCE_SITES } from '@/lib/site-config';
+import { LEGAL } from '@/lib/legal-config';
 
 export const metadata: Metadata = {
   title: 'Politique de confidentialité',
@@ -68,7 +69,7 @@ export default function ConfidentialitePage() {
       <h3>Durée de conservation</h3>
       <p>
         Une demande non vendue est supprimée automatiquement au terme de{' '}
-        <strong>[X mois]</strong>. Une demande vendue est conservée pendant la durée
+        <strong>{LEGAL.retentionLeadsMois} mois</strong>. Une demande vendue est conservée pendant la durée
         nécessaire à la preuve de la transaction, puis archivée conformément aux
         obligations comptables.
       </p>
@@ -85,7 +86,7 @@ export default function ConfidentialitePage() {
       <p>
         Vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation,
         d’opposition et de portabilité, ainsi que du droit de retirer votre consentement
-        à tout moment. Pour l’exercer, écrivez à <strong>{SITE.email}</strong> ; nous
+        à tout moment. Pour l’exercer, écrivez à <strong>{LEGAL.email}</strong> ; nous
         répondons sous un mois.
       </p>
       <p>

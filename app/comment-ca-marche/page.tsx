@@ -3,6 +3,7 @@ import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { MarketingFooter } from '@/components/layout/MarketingFooter';
 import { ButtonLink } from '@/components/ui/Button';
 import { Card, Section } from '@/components/ui/Card';
+import { SourceLogo } from '@/components/ui/SourceLogo';
 import { SOURCE_SITES } from '@/lib/site-config';
 
 export const metadata: Metadata = {
@@ -92,8 +93,8 @@ export default function CommentCaMarchePage() {
           <div className="mt-9 grid gap-5 sm:grid-cols-2">
             {SOURCE_SITES.map((site) => (
               <Card key={site.domain} className="p-6">
-                <p className="text-lg font-bold">{site.label}</p>
-                <p className="mt-1 text-sm text-brand">{site.domain}</p>
+                <SourceLogo domain={site.domain} label={site.label} height={30} />
+                <p className="mt-2 text-sm text-brand">{site.domain}</p>
                 <p className="mt-3 text-sm leading-relaxed text-ink-soft">
                   {site.focus}
                 </p>

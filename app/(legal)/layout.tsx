@@ -1,6 +1,7 @@
 import { MarketingHeader } from '@/components/layout/MarketingHeader';
 import { MarketingFooter } from '@/components/layout/MarketingFooter';
 import { Container } from '@/components/ui/Card';
+import { champsManquants } from '@/lib/legal-config';
 
 /**
  * Gabarit des pages légales.
@@ -12,20 +13,26 @@ import { Container } from '@/components/ui/Card';
  * décider.
  */
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
+  // Le bandeau disparaît de lui-même une fois lib/legal-config.ts renseigné.
+  const manquants = champsManquants();
+
   return (
     <>
       <MarketingHeader />
       <main className="py-14">
         <Container className="max-w-3xl">
-          <div className="mb-10 rounded-card border border-accent/40 bg-accent-tint px-5 py-4">
-            <p className="text-sm font-semibold text-accent">
-              Document de travail — à faire valider par un juriste
-            </p>
-            <p className="mt-1.5 text-sm text-ink-soft">
-              Cette page est une trame destinée à être complétée et validée avant la
-              mise en ligne publique. Elle n’a aucune valeur juridique en l’état.
-            </p>
-          </div>
+          {manquants.length > 0 && (
+            <div className="mb-10 rounded-card border border-accent/40 bg-accent-tint px-5 py-4">
+              <p className="text-sm font-semibold text-accent">
+                Document de travail — informations manquantes
+              </p>
+              <p className="mt-1.5 text-sm text-ink-soft">
+                À renseigner dans <code>lib/legal-config.ts</code> :{' '}
+                {manquants.join(', ')}. Cette page n’a pas de valeur juridique
+                tant qu’elle est incomplète, et le contenu reste à faire valider.
+              </p>
+            </div>
+          )}
 
           <article className="prose-akizit">{children}</article>
         </Container>

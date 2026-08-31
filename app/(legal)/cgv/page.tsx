@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { SITE } from '@/lib/site-config';
+import { LEGAL } from '@/lib/legal-config';
 import { DISCOUNT_TIERS, formatRate } from '@/lib/pricing/tiers';
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function CgvPage() {
 
       <h2>1. Objet</h2>
       <p>
-        Les présentes conditions régissent la vente, par [Raison sociale] (« Akizit »),
+        Les présentes conditions régissent la vente, par {LEGAL.raisonSociale} (« Akizit »),
         de demandes de mise en relation (« leads ») à des clients professionnels
         (« l’Acheteur »). Toute commande implique leur acceptation sans réserve.
       </p>
@@ -119,10 +119,10 @@ export default function CgvPage() {
       <h2>11. Droit applicable</h2>
       <p>
         Les présentes sont soumises au droit français. À défaut de résolution amiable,
-        le litige relève des tribunaux compétents de [ville].
+        le litige relève des tribunaux compétents du ressort du siège de l’éditeur.
       </p>
 
-      <p>Contact : {SITE.email}</p>
+      <p>Contact : {LEGAL.email}</p>
     </>
   );
 }
