@@ -1,6 +1,6 @@
 import 'server-only';
 import { cookies } from 'next/headers';
-import { adminAuth } from './admin';
+import { adminAuth, isAdminConfigured } from './admin';
 
 /**
  * Session serveur.
@@ -43,6 +43,10 @@ export async function createSessionCookie(idToken: string): Promise<string> {
 export async function currentUser(
   options: { checkRevoked?: boolean } = {},
 ): Promise<SessionUser | null> {
+  // Sans backend configuré, il n'y a pas de session à vérifier : le site
+  // fonctionne en mode démonstration plutôt que de renvoyer une erreur.
+  if (!isAdminConfigured()) return null;
+
   const store = await cookies();
   const value = store.get(SESSION_COOKIE)?.value;
   if (!value) return null;
